@@ -60,7 +60,6 @@ int main() {
 	std::cout << "Start main loop" << std::endl;
 	while (!glfwWindowShouldClose(window)) {
 		glfwPollEvents();
-		// context->ProcessInput(window);
 		context->Render();
 		glfwSwapBuffers(window);
 	}
