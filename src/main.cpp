@@ -1,4 +1,4 @@
-#include "../include/scop.h"
+#include "../include/humanGL.h"
 #include "../include/context.h"
 
 void OnFramebufferSizeChange(GLFWwindow* window, int width, int height) {
@@ -12,12 +12,7 @@ void OnKeyEvent(GLFWwindow* window, int key, int scancode, int action, int mods)
 	}
 }
 
-int main(int argc, const char** argv) {
-
-	if (argc != 3) {
-		std::cerr << "Usage: ./SCOP.exe <path_to_obj_file> <path_to_bmp_file>" << std::endl;
-		return -1;
-	}
+int main() {
 
 	std::cout << "Start program" << std::endl;
 
@@ -50,7 +45,7 @@ int main(int argc, const char** argv) {
 		return -1;
 	}
 
-	std::unique_ptr<Context> context = Context::create(argv[1], argv[2]);
+	std::unique_ptr<Context> context = Context::create();
 	if (!context) {
 		std::cerr << "failed to create context" << std::endl;
 		glfwTerminate();
@@ -65,7 +60,7 @@ int main(int argc, const char** argv) {
 	std::cout << "Start main loop" << std::endl;
 	while (!glfwWindowShouldClose(window)) {
 		glfwPollEvents();
-		context->ProcessInput(window);
+		// context->ProcessInput(window);
 		context->Render();
 		glfwSwapBuffers(window);
 	}
