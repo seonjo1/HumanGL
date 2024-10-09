@@ -1,34 +1,50 @@
 #ifndef MODEL_H
 # define MODEL_H
 
-# include "humanGL.h"
 # include "mesh.h"
 # include "program.h"
 # include <cmath>
 # include <algorithm>
+# include <map>
+# include <string>
+
+enum class ePart
+{
+	BODY,
+	HEAD,
+	LEFT_UPPER_ARM,
+	LEFT_LOWER_ARM,
+	RIGHT_UPPER_ARM,
+	RIGHT_LOWER_ARM,
+	LEFT_UPPER_LEG,
+	LEFT_LOWER_LEG,
+	RIGHT_UPPER_LEG,
+	RIGHT_LOWER_LEG,
+	NONE,
+};
+
+struct PartInfo {
+	std::string name; // 파트 이름
+    glmath::vec3 position;    // 각 파트의 초기 위치
+	glmath::vec3 translation; // 각 파트의 이동
+    glmath::vec3 rotation;    // 각 파트의 회전 (x, y, z 축의 각도)
+    glmath::vec3 scale;       // 각 파트의 크기
+    glmath::vec3 color;       // 각 파트의 색상
+};
 
 class Model {
 public:
-	static std::unique_ptr<Model> create(std::string fileName);
-	void draw(Program* program, glmath::vec3& cameraPos, glmath::vec3& cameraUp, glmath::vec3& cameraFront);
-	void updateModel(glmath::vec3& move, float degree, float transSpeed);
+	static std::unique_ptr<Model> createHuman(ePart part = ePart::BODY);
 
 private:
-	bool createMeshes(const std::string& fileName);
-	void addVertex(glload::ObjInfo* objInfo, std::vector<Vertex>& vertices, std::vector<uint32_t>& indices, glload::Face& face);
-	void setColor(std::vector<Vertex>& vertices, std::vector<glmath::vec3>& colors);
-	void setModelPos(std::vector<Vertex>& vertices);
-	void makeTextureCoord(std::vector<Vertex>& vertices);
-	void makeNormalVector(std::vector<Vertex>& vertices, int idx);
-	bool isAcrossUVBoundary(std::vector<Vertex>& vertices, int idx);
-
-
-
-	std::vector<std::unique_ptr<Mesh>> m_meshes;
-	glmath::vec3 m_modelPos{0.0f, 0.0f, 0.0f};
-	glmath::vec3 m_move{0.0f, 0.0f, 0.0f};
-	float m_degree{0.0f};
-	float m_texRatio{0.0f};
+	void createMesh(ePart part);
+	bool createChildren(std::vector<ePart> parts);
+	PartInfo getPartInfo(ePart part);
+	std::vector<ePart> getPartChildrenInfo(ePart part);
+	
+	std::vector<std::unique_ptr<Model>> m_children;
+	std::unique_ptr<Mesh> m_mesh;
+	PartInfo m_partInfo;
 };
 
 #endif
