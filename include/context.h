@@ -1,7 +1,7 @@
 #ifndef CONTEXT_H
 # define CONTEXT_H
 
-# include "scop.h"
+# include "humanGL.h"
 # include "vertexArray.h"
 # include "buffer.h"
 # include "program.h"
@@ -12,14 +12,14 @@
 
 class Context {
 public:
-	static std::unique_ptr<Context> create(const char* objFile, const char* bmpFile);
+	static std::unique_ptr<Context> create();
 	void Render();
 	void ProcessInput(GLFWwindow *window);
 	void Reshape(int width, int height);
 
 private:
 	Context() {};
-	bool init(const char* objFile, const char* bmpFile);
+	bool init();
 
 	int m_width {WINDOW_WIDTH};
 	int m_height {WINDOW_HEIGHT};

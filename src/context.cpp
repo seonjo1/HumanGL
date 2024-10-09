@@ -48,22 +48,19 @@ void Context::ProcessInput(GLFWwindow *window)
 	m_model->updateModel(move, degree, transSpeed);
 }
 
-std::unique_ptr<Context> Context::create(const char* objFile, const char* bmpFile) {
+std::unique_ptr<Context> Context::create() {
 	std::unique_ptr<Context> context(new Context());
 	if (!context->init(objFile, bmpFile)) return nullptr;
 	return context;
 }
 
-bool Context::init(const char* objFile, const char* bmpFile) {
-	m_model = Model::create(objFile);
-	m_program = Program::create("./shader/simple.vs", "./shader/simple.fs");
-	m_image = Image::create(bmpFile);
+bool Context::init() {
 
-	if (!m_program || !m_model || !m_image) {
+	m_program = Program::create("./shader/simple.vs", "./shader/simple.fs");
+
+	if (m_program) {
 		return false;
 	}
-
-	m_texture = Texture::create(m_image);
 
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_MULTISAMPLE);
