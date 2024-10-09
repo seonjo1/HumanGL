@@ -1,7 +1,7 @@
 #ifndef PROGRAM_H
 # define PROGRAM_H
 
-# include "scop.h"
+# include "humanGL.h"
 # include "shader.h"
 
 class Program {

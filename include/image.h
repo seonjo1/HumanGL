@@ -1,7 +1,7 @@
 #ifndef IMAGE_H
 # define IMAGE_H
 
-# include "scop.h"
+# include "humanGL.h"
 
 class Image {
 public:

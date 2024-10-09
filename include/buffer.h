@@ -1,7 +1,7 @@
 #ifndef BUFFER_H
 # define BUFFER_H
 
-# include "scop.h"
+# include "humanGL.h"
 
 class Buffer {
 public:

@@ -1,7 +1,7 @@
 #ifndef VERTEXARRAY_H
 # define VERTEXARRAY_H
 
-# include "scop.h"
+# include "humanGL.h"
 
 class VertexArray {
 public:

@@ -1,7 +1,7 @@
 #ifndef MODEL_H
 # define MODEL_H
 
-# include "scop.h"
+# include "humanGL.h"
 # include "mesh.h"
 # include "program.h"
 # include <cmath>

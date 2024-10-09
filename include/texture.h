@@ -1,7 +1,7 @@
 #ifndef TEXTURE_H
 # define TEXTURE_H
 
-# include "scop.h"
+# include "humanGL.h"
 # include "image.h"
 
 class Texture {

@@ -1,7 +1,7 @@
 #ifndef SHADER_H
 # define SHADER_H
 
-# include "scop.h"
+# include "humanGL.h"
 
 class Shader {
 public:
