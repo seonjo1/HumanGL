@@ -1,7 +1,7 @@
 #ifndef MESH_H
 # define MESH_H
 
-# include "scop.h"
+# include "humanGL.h"
 # include "vertexArray.h"
 # include "buffer.h"
 # include <random>
@@ -30,6 +30,7 @@ struct Vertex {
 class Mesh {
 public:
 	static std::unique_ptr<Mesh> createPlane();
+	static std::unique_ptr<Mesh> createBox();
 	static std::unique_ptr<Mesh> createMesh(std::vector<Vertex>& vertices,
 											std::vector<uint32_t>& indices,
 											std::vector<glmath::vec3>& colors, 
