@@ -1,0 +1,30 @@
+cmake_minimum_required(VERSION 3.13)
+
+set(PROJECT_NAME HumanGL)
+set(CMAKE_CXX_STANDARD 17)
+ 
+set(WINDOW_NAME "HumanGL")
+set(WINDOW_WIDTH 1920)
+set(WINDOW_HEIGHT 1080)
+
+project(${PROJECT_NAME})
+set(SRC src/main.cpp src/context.cpp src/glload.cpp src/glmath.cpp
+		src/vertexArray.cpp src/buffer.cpp src/shader.cpp src/program.cpp
+		src/image.cpp src/texture.cpp src/mesh.cpp src/model.cpp)
+
+add_executable(${PROJECT_NAME} ${SRC})
+
+include(Dependency.cmake)
+
+# 우리 프로젝트에 include / lib 관련 옵션 추가
+target_include_directories(${PROJECT_NAME} PUBLIC ${DEP_INCLUDE_DIR})
+target_link_directories(${PROJECT_NAME} PUBLIC ${DEP_LIB_DIR})
+target_link_libraries(${PROJECT_NAME} PUBLIC ${DEP_LIBS})
+
+target_compile_definitions(${PROJECT_NAME} PUBLIC
+WINDOW_NAME="${WINDOW_NAME}"
+WINDOW_WIDTH=${WINDOW_WIDTH}
+WINDOW_HEIGHT=${WINDOW_HEIGHT})
+
+# Dependency들이 먼저 build 될 수 있게 관계 설정 / 뒤에서 부터 컴파일
+add_dependencies(${PROJECT_NAME} ${DEP_LIST})
