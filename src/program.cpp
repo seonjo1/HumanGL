@@ -54,8 +54,13 @@ void Program::setUniform(const char* varName, GLint value) {
 }
 
 void Program::setUniform(const char* varName, GLfloat value) {
-    GLuint location = glGetUniformLocation(m_program, varName);
-    glUniform1f(location, value);
+	GLuint location = glGetUniformLocation(m_program, varName);
+	glUniform1f(location, value);
+}
+
+void Program::setUniform(const char* varName, glmath::vec3 value) {
+	GLuint location = glGetUniformLocation(m_program, varName);
+	glUniform3fv(location, 1, glmath::value_ptr(value));
 }
 
 void Program::setUniform(const char* varName, glmath::mat4& matrix) {

@@ -11,6 +11,7 @@ public:
 	void useProgram();
 	void setUniform(const char* varName, GLint value);
 	void setUniform(const char* varName, GLfloat value);
+	void setUniform(const char* varName, glmath::vec3 value);
 	void setUniform(const char* varName, glmath::mat4& matrix);
 
 private:
