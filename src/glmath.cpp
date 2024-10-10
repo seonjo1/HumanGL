@@ -235,6 +235,40 @@ glmath::vec4 glmath::mat4::operator[](int idx) const {
 	throw std::out_of_range("Index out of range");
 }
 
+// class quat
+
+glmath::quat::quat(float x, float y, float z, float w)
+	: x(x), y(y), z(z), w(w) {};
+
+glmath::quat::quat(const glmath::vec3& axis, float angle){
+	glmath::vec3 normalAxis = glmath::normalize(axis);
+	float halfAngle = angle / 2.0f;
+	float s = sin(halfAngle);
+	w = cos(halfAngle);
+	x = normalAxis.x * s;
+	y = normalAxis.y * s;
+	z = normalAxis.z * s;
+}
+
+glmath::quat::quat(const vec3& eulerAngle) {
+	glmath::quat xQuat(glmath::vec3(1.0f, 0.0f, 0.0f), eulerAngle.x);
+	glmath::quat yQuat(glmath::vec3(0.0f, 1.0f, 0.0f), eulerAngle.y);
+	glmath::quat zQuat(glmath::vec3(0.0f, 0.0f, 1.0f), eulerAngle.z);
+	glmath::quat mulQuat = xQuat * yQuat * zQuat;
+
+	x = mulQuat.x;
+	y = mulQuat.y;
+	z = mulQuat.z;
+	w = mulQuat.w;
+}
+
+glmath::quat glmath::quat::operator*(const quat& rhs) const {
+	return quat( w * rhs.x + x * rhs.w + y * rhs.z - z * rhs.y,
+	            w * rhs.y - x * rhs.z + y * rhs.w + z * rhs.x,
+	            w * rhs.z + x * rhs.y - y * rhs.x + z * rhs.w,
+	            w * rhs.w - x * rhs.x - y * rhs.y - z * rhs.z);
+}
+
 // non-member operator function
 
 glmath::vec2 glmath::operator*(float scalar, const glmath::vec2& vector) {
@@ -401,7 +435,7 @@ glmath::mat4 glmath::perspective(float fovy, float aspect, float zNear, float zF
 						glmath::vec4(0.0f, 0.0f, (2 * zFar * zNear) / (zNear - zFar), 0.0f));
 }
 
-glmath::mat4 glmath::lookAt(glmath::vec3 cameraPos, glmath::vec3 cameraTarget, glmath::vec3 cameraUp) {
+glmath::mat4 glmath::lookAt(const glmath::vec3& cameraPos, const glmath::vec3& cameraTarget, const glmath::vec3& cameraUp) {
 	glmath::vec3 cameraZ = glmath::normalize(cameraPos - cameraTarget);
 	glmath::vec3 cameraX = glmath::normalize(glmath::cross(cameraUp, cameraZ));
 	glmath::vec3 cameraY = glmath::cross(cameraZ, cameraX);
@@ -412,4 +446,22 @@ glmath::mat4 glmath::lookAt(glmath::vec3 cameraPos, glmath::vec3 cameraTarget, g
 									-glmath::dot(cameraPos, cameraY),
 									-glmath::dot(cameraPos, cameraZ),
 									1.0f));
+}
+
+glmath::mat4 glmath::mat4_cast(const glmath::quat& quat) {
+	glmath::mat4 rotate(1.0f);
+
+	rotate[0][0] = 1.0f - 2.0f * quat.y * quat.y - 2.0f * quat.z * quat.z;
+	rotate[1][0] = 2.0f * quat.x * quat.y - 2.0f * quat.w * quat.z;
+	rotate[2][0] = 2.0f * quat.x * quat.z + 2.0f * quat.w * quat.y;
+
+	rotate[0][1] = 2.0f * quat.x * quat.y + 2.0f * quat.w * quat.z;
+	rotate[1][1] = 1.0f - 2.0f * quat.x * quat.x - 2.0f * quat.z * quat.z;
+	rotate[2][1] = 2.0f * quat.y * quat.z - 2.0f * quat.w * quat.x;
+
+	rotate[0][2] = 2.0f * quat.x * quat.z - 2.0f * quat.w * quat.y;
+	rotate[1][2] = 2.0f * quat.y * quat.z + 2.0f * quat.w * quat.x;
+	rotate[2][2] = 1.0f - 2.0f * quat.x * quat.x - 2.0f * quat.y * quat.y;
+
+	return rotate;
 }

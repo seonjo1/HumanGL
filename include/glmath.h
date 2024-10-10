@@ -78,6 +78,20 @@ public:
 	vec4 operator[](int idx) const;
 };
 
+class quat {
+public:
+	float x;
+	float y;
+	float z;
+	float w;
+
+	quat(float x, float y, float z, float w);
+	quat(const vec3& axis, float angle);
+	quat(const vec3& eulerAngle);
+
+	quat operator*(const quat& rhs) const;
+};
+
 vec2 operator*(float scalar, const vec2& vector);
 vec2 operator*(const vec2& vector, float scalar);
 
@@ -111,8 +125,8 @@ mat4 scale(const mat4& matrix, const vec3& vector);
 mat4 translate(const mat4& matrix, const vec3& vector);
 mat4 rotate(const mat4& matrix, float theta, const vec3& vector);
 mat4 perspective(float fovy, float aspect, float zNear, float zFar);
-mat4 lookAt(vec3 cameraPos, vec3 cameraTarget, vec3 cameraUp);
-
+mat4 lookAt(const vec3& cameraPos, const vec3& cameraTarget, const vec3& cameraUp);
+mat4 mat4_cast(const quat& quat);
 }
 
 #endif
