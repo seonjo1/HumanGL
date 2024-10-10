@@ -22,7 +22,7 @@ private:
 	int m_width {WINDOW_WIDTH};
 	int m_height {WINDOW_HEIGHT};
 
-	glmath::vec3 m_cameraPos {0.0f, 0.0f, 5.0f};
+	glmath::vec3 m_cameraPos {0.0f, 0.0f, 20.0f};
 	glmath::vec3 m_cameraUp {0.0f, 1.0f, 0.0f};
 	glmath::vec3 m_cameraFront {0.0f, 0.0f, -1.0f};
 
