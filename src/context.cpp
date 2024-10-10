@@ -15,11 +15,9 @@ std::unique_ptr<Context> Context::create() {
 bool Context::init() {
 
 	m_human = Model::createHuman();
-	// m_program = Program::create("./shader/simple.vs", "./shader/simple.fs");
+	m_program = Program::create("./shader/simple.vs", "./shader/simple.fs");
 
-	// if (m_program) {
-	// 	return false;
-	// }
+	if (!m_human || !m_program) { return false; }
 
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_MULTISAMPLE);
