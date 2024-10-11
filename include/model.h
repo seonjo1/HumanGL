@@ -28,6 +28,7 @@ struct PartInfo {
 	std::string name; // 파트 이름
     glmath::vec3 position;    // 각 파트의 상대 위치
 	glmath::vec3 translation; // 각 파트의 이동
+	glmath::vec3 rotateTranslation; // 각 파트의 회전축으로의 이동
     glmath::vec3 eulerAngle;    // 각 파트의 회전 (x, y, z 축의 각도)
     glmath::vec3 scale;       // 각 파트의 크기
     glmath::vec3 color;       // 각 파트의 색상
