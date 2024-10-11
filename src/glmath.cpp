@@ -251,9 +251,9 @@ glmath::quat::quat(const glmath::vec3& axis, float angle){
 }
 
 glmath::quat::quat(const vec3& eulerAngle) {
-	glmath::quat xQuat(glmath::vec3(1.0f, 0.0f, 0.0f), eulerAngle.x);
-	glmath::quat yQuat(glmath::vec3(0.0f, 1.0f, 0.0f), eulerAngle.y);
-	glmath::quat zQuat(glmath::vec3(0.0f, 0.0f, 1.0f), eulerAngle.z);
+	glmath::quat xQuat(glmath::vec3(1.0f, 0.0f, 0.0f), glmath::radians(eulerAngle.x));
+	glmath::quat yQuat(glmath::vec3(0.0f, 1.0f, 0.0f), glmath::radians(eulerAngle.y));
+	glmath::quat zQuat(glmath::vec3(0.0f, 0.0f, 1.0f), glmath::radians(eulerAngle.z));
 	glmath::quat mulQuat = xQuat * yQuat * zQuat;
 
 	x = mulQuat.x;
