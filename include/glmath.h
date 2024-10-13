@@ -121,6 +121,7 @@ vec4 normalize(const vec4& vector);
 
 float radians(float degree);
 
+mat4 inverse(const mat4& matrix);
 mat4 scale(const mat4& matrix, const vec3& vector);
 mat4 translate(const mat4& matrix, const vec3& vector);
 mat4 rotate(const mat4& matrix, float theta, const vec3& vector);
