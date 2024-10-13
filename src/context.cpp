@@ -1,6 +1,6 @@
 #include "../include/context.h"
 
-void Context::Reshape(int width, int height) {
+void Context::reshape(int width, int height) {
 	m_width = width;
 	m_height = height;
 	glViewport(0, 0, m_width, m_height);
@@ -10,6 +10,41 @@ std::unique_ptr<Context> Context::create() {
 	std::unique_ptr<Context> context(new Context());
 	if (!context->init()) return nullptr;
 	return context;
+}
+
+void Context::mouseButton(int button, int action, double x, double y) {
+	if (button == GLFW_MOUSE_BUTTON_RIGHT)
+	{
+		if (action == GLFW_PRESS)
+		{
+			m_camera.saveCurrentPos((float)x, (float)y);
+			m_cameraControl = true;
+		}
+		else if (action == GLFW_RELEASE)
+			m_cameraControl = false;
+	}
+}
+
+void Context::mouseMove(double x, double y) {
+
+	if (!m_cameraControl) { return ; }
+
+	glmath::vec2 pos ((float)x, (float)y);
+	m_camera.rotate(pos);
+}
+
+void Context::processInput(GLFWwindow *window) {
+
+	if (!m_cameraControl) { return ; }
+
+	bool isPressW = glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS;
+	bool isPressS = glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS;
+	bool isPressD = glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS;
+	bool isPressA = glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS;
+	bool isPressE = glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS;
+	bool isPressQ = glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS;
+
+	m_camera.move(isPressW, isPressS, isPressD, isPressA, isPressE, isPressQ);
 }
 
 bool Context::init() {
@@ -25,13 +60,13 @@ bool Context::init() {
 	return true;
 }
 
-void Context::Render() {
+void Context::render() {
 
 	glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 
-	glmath::mat4 view = glmath::lookAt(m_cameraPos, m_cameraPos + m_cameraFront, m_cameraUp);
+	glmath::mat4 view = m_camera.getViewMatrix();
 	glmath::mat4 projection = glmath::perspective(glmath::radians(45.0f), (float)m_width / (float)m_height, 0.01f, 60.0f);
 	
 	m_program->useProgram();

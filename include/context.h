@@ -7,13 +7,16 @@
 # include "program.h"
 # include "mesh.h"
 # include "model.h"
+# include "camera.h"
 
 class Context {
 public:
 	static std::unique_ptr<Context> create();
-	void Render();
-	void ProcessInput(GLFWwindow *window);
-	void Reshape(int width, int height);
+	void render();
+	void processInput(GLFWwindow *window);
+	void reshape(int width, int height);
+	void mouseMove(double x, double y);
+	void mouseButton(int button, int action, double x, double y);
 
 private:
 	Context() {};
@@ -22,9 +25,8 @@ private:
 	int m_width {WINDOW_WIDTH};
 	int m_height {WINDOW_HEIGHT};
 
-	glmath::vec3 m_cameraPos {0.0f, 0.0f, 20.0f};
-	glmath::vec3 m_cameraUp {0.0f, 1.0f, 0.0f};
-	glmath::vec3 m_cameraFront {0.0f, 0.0f, -1.0f};
+	Camera m_camera;
+	bool m_cameraControl { false };
 
 	std::unique_ptr<Model> m_human;
 	std::unique_ptr<Program> m_program;
