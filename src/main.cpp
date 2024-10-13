@@ -3,7 +3,21 @@
 
 void OnFramebufferSizeChange(GLFWwindow* window, int width, int height) {
 	Context* context = (Context *)glfwGetWindowUserPointer(window);
-	context->Reshape(width, height);
+	context->reshape(width, height);
+}
+
+void OncursorPos(GLFWwindow *window, double x, double y)
+{
+	Context* context = (Context *)glfwGetWindowUserPointer(window);
+	context->mouseMove(x, y);
+}
+
+void OnMouseButton(GLFWwindow *window, int button, int action, int modifier)
+{
+	Context* context = (Context *)glfwGetWindowUserPointer(window);
+	double x, y;
+	glfwGetCursorPos(window, &x, &y);
+	context->mouseButton(button, action, x, y); 
 }
 
 void OnKeyEvent(GLFWwindow* window, int key, int scancode, int action, int mods) {
@@ -56,11 +70,14 @@ int main() {
 	OnFramebufferSizeChange(window, WINDOW_WIDTH, WINDOW_HEIGHT);
 	glfwSetFramebufferSizeCallback(window, OnFramebufferSizeChange);
 	glfwSetKeyCallback(window, OnKeyEvent);
+	glfwSetCursorPosCallback(window, OncursorPos);
+	glfwSetMouseButtonCallback(window, OnMouseButton);
 
 	std::cout << "Start main loop" << std::endl;
 	while (!glfwWindowShouldClose(window)) {
 		glfwPollEvents();
-		context->Render();
+		context->processInput(window);
+		context->render();
 		glfwSwapBuffers(window);
 	}
 
