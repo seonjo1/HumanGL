@@ -21,6 +21,7 @@ enum class ePart
 	LEFT_LOWER_LEG,
 	RIGHT_UPPER_LEG,
 	RIGHT_LOWER_LEG,
+	GROUND,
 	NONE,
 };
 
@@ -37,6 +38,7 @@ struct PartInfo {
 class Model {
 public:
 	static std::unique_ptr<Model> createHuman(ePart part = ePart::BODY);
+	static std::unique_ptr<Model> createGround();
 	static std::stack<glmath::mat4> s_stack;
 	void draw(Program* program);
 

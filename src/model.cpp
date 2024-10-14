@@ -2,6 +2,12 @@
 
 std::stack<glmath::mat4> Model::s_stack;
 
+std::unique_ptr<Model> Model::createGround() {
+	std::unique_ptr<Model> model(new Model());
+	model->createMesh(ePart::GROUND);
+	return model;
+}
+
 std::unique_ptr<Model> Model::createHuman(ePart part) {
 	std::unique_ptr<Model> model(new Model());
 	model->createMesh(part);
@@ -57,7 +63,8 @@ PartInfo Model::getPartInfo(ePart part) {
 		{ ePart::LEFT_UPPER_LEG, {"LU_LEG", glmath::vec3(-0.5f, -3.0f, 0.0f), glmath::vec3(0.0f), glmath::vec3(0.0f, 1.0f, 0.0f), glmath::vec3(0.0f), glmath::vec3(1.0f, 2.0f, 1.0f), glmath::vec3(0.3f, 1.0f, 0.3f) } }, // 왼쪽 상박 (다리)
 		{ ePart::LEFT_LOWER_LEG, {"LL_LEG", glmath::vec3(0.0f, -2.0f, 0.0f), glmath::vec3(0.0f), glmath::vec3(0.0f, 1.0f, 0.0f), glmath::vec3(0.0f), glmath::vec3(1.0f, 2.0f, 1.0f), glmath::vec3(0.3f, 1.0f, 0.3f) } }, // 왼쪽 하박 (다리)
 		{ ePart::RIGHT_UPPER_LEG, {"RU_LEG", glmath::vec3(0.5f, -3.0f, 0.0f), glmath::vec3(0.0f), glmath::vec3(0.0f, 1.0f, 0.0f), glmath::vec3(0.0f), glmath::vec3(1.0f, 2.0f, 1.0f), glmath::vec3(0.3f, 1.0f, 0.3f) } }, // 오른쪽 상박 (다리)
-		{ ePart::RIGHT_LOWER_LEG, {"RL_LEG", glmath::vec3(0.0f, -2.0f, 0.0f), glmath::vec3(0.0f), glmath::vec3(0.0f, 1.0f, 0.0f), glmath::vec3(0.0f), glmath::vec3(1.0f, 2.0f, 1.0f), glmath::vec3(0.3f, 1.0f, 0.3f) } }  // 오른쪽 하박 (다리)
+		{ ePart::RIGHT_LOWER_LEG, {"RL_LEG", glmath::vec3(0.0f, -2.0f, 0.0f), glmath::vec3(0.0f), glmath::vec3(0.0f, 1.0f, 0.0f), glmath::vec3(0.0f), glmath::vec3(1.0f, 2.0f, 1.0f), glmath::vec3(0.3f, 1.0f, 0.3f) } },  // 오른쪽 하박 (다리)
+		{ ePart::GROUND, {"RL_LEG", glmath::vec3(0.0f, -6.5f, 0.0f), glmath::vec3(0.0f), glmath::vec3(0.0f, 0.0f, 0.0f), glmath::vec3(0.0f), glmath::vec3(100.0f, 1.0f, 100.0f), glmath::vec3(0.39f, 0.39f, 0.39f) } },  // 오른쪽 하박 (다리)
 	};
 	return partInfoMap.at(part);
 }
