@@ -50,6 +50,7 @@ void Context::processInput(GLFWwindow *window) {
 bool Context::init() {
 
 	m_human = Model::createHuman();
+	m_ground = Model::createGround();
 	m_program = Program::create("./shader/simple.vs", "./shader/simple.fs");
 
 	if (!m_human || !m_program) { return false; }
@@ -70,8 +71,8 @@ void Context::render() {
 	glmath::mat4 projection = glmath::perspective(glmath::radians(45.0f), (float)m_width / (float)m_height, 0.01f, 60.0f);
 	
 	m_program->useProgram();
-	
 	Model::s_stack.push(projection * view);
+	m_ground->draw(m_program.get());
 	m_human->draw(m_program.get());
 	Model::s_stack.pop();
 }

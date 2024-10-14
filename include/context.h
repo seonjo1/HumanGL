@@ -29,6 +29,7 @@ private:
 	bool m_cameraControl { false };
 
 	std::unique_ptr<Model> m_human;
+	std::unique_ptr<Model> m_ground;
 	std::unique_ptr<Program> m_program;
 };
 
