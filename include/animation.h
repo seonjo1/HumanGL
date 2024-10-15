@@ -1,6 +1,21 @@
 #ifndef ANIMATION_H
 # define ANIMATION_H
 
+# include "HumanGL.h"
+# include <map>
+
+enum class eAct
+{
+	STOP = 0,
+	JUMP = (1 << 0),
+	WALK = (1 << 1),
+};
+
+int operator&(int bit, eAct act);
+int operator&(eAct act, int bit);
+int operator|(int bit, eAct act);
+int operator|(eAct act, int bit);
+
 enum class ePart
 {
 	BODY,
@@ -17,8 +32,19 @@ enum class ePart
 	NONE,
 };
 
-class Animation {
+struct Transform {
+	glmath::vec3 position;
+	glmath::quat rotation;
+	glmath::vec3 scale;
+};
 
+class Animation {
+public:
+	void changeState(int input);
+	std::map<ePart,Transform> getTransform();
+
+private:
+	int m_state;
 };
 
 #endif
