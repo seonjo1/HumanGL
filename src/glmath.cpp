@@ -238,7 +238,7 @@ glmath::vec4 glmath::mat4::operator[](int idx) const {
 // class quat
 
 glmath::quat::quat()
-	: x(0), y(0), z(0), w(0) {};
+	: x(0), y(0), z(0), w(1) {};
 
 glmath::quat::quat(float x)
 	: x(x), y(x), z(x), w(x) {};
