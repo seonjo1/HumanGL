@@ -15,33 +15,33 @@ void Camera::rotate(glmath::vec2& pos) {
 	m_prevMousePos = pos;
 }
 
-void Camera::move(bool isPressW, bool isPressS, bool isPressD,
-					bool isPressA, bool isPressE, bool isPressQ) {
+void Camera::move(bool pressW, bool pressS, bool pressD,
+					bool pressA, bool pressE, bool pressQ) {
 
 	glmath::vec3 cameraRight = glmath::normalize(glmath::cross(m_cameraUp, -1 * m_cameraFront));
 	glmath::vec3 cameraUp = glmath::normalize(glmath::cross(-1 * m_cameraFront, cameraRight));
 
-	if (isPressW) {
+	if (pressW) {
 		m_cameraPos = m_cameraPos + m_cameraSpeed * m_cameraFront;
 	}
 
-	if (isPressS) {
+	if (pressS) {
 		m_cameraPos = m_cameraPos - m_cameraSpeed * m_cameraFront;
 	}
 
-	if (isPressD) {
+	if (pressD) {
 		m_cameraPos = m_cameraPos + m_cameraSpeed * cameraRight;
 	}
 
-	if (isPressA) {
+	if (pressA) {
 		m_cameraPos = m_cameraPos - m_cameraSpeed * cameraRight;
 	}
 
-	if (isPressE) {
+	if (pressE) {
 		m_cameraPos = m_cameraPos + m_cameraSpeed * cameraUp;
 	}
 
-	if (isPressQ) {
+	if (pressQ) {
 		m_cameraPos = m_cameraPos - m_cameraSpeed * cameraUp;
 	}
 }
