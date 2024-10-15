@@ -9,7 +9,7 @@ Animation::Animation() {
 	m_actionList[eAct::JUMP] = std::make_unique<Jump>();
 	m_actionList[eAct::WALK] = std::make_unique<Walk>();
 
-	for (int part = static_cast<int>(ePart::BODY); part < static_cast<int>(ePart::GROUND); part++) {
+	for (int part = static_cast<int>(ePart::BODY); part < static_cast<int>(ePart::NONE); part++) {
 		m_transformList[static_cast<ePart>(part)] = Transform();
 	}
 }
