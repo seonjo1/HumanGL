@@ -2,49 +2,21 @@
 # define ANIMATION_H
 
 # include "HumanGL.h"
-# include <map>
-
-enum class eAct
-{
-	STOP = 0,
-	JUMP = (1 << 0),
-	WALK = (1 << 1),
-};
-
-int operator&(int bit, eAct act);
-int operator&(eAct act, int bit);
-int operator|(int bit, eAct act);
-int operator|(eAct act, int bit);
-
-enum class ePart
-{
-	BODY,
-	HEAD,
-	LEFT_UPPER_ARM,
-	LEFT_LOWER_ARM,
-	RIGHT_UPPER_ARM,
-	RIGHT_LOWER_ARM,
-	LEFT_UPPER_LEG,
-	LEFT_LOWER_LEG,
-	RIGHT_UPPER_LEG,
-	RIGHT_LOWER_LEG,
-	GROUND,
-	NONE,
-};
-
-struct Transform {
-	glmath::vec3 position;
-	glmath::quat rotation;
-	glmath::vec3 scale;
-};
+# include "action.h"
 
 class Animation {
 public:
-	void changeState(int input);
+	static std::unique_ptr<Animation> createAnimationManager();
+	void changeState(int inputState, float yaw);
 	std::map<ePart,Transform> getTransform();
 
 private:
+	Animation();
+	
 	int m_state;
+	ObjectInfo m_objectInfo;
+	std::map<ePart, Transform> m_transformList;
+	std::map<eAct, std::unique_ptr<Action>> m_actionList;
 };
 
 #endif
