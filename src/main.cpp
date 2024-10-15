@@ -76,7 +76,8 @@ int main() {
 	std::cout << "Start main loop" << std::endl;
 	while (!glfwWindowShouldClose(window)) {
 		glfwPollEvents();
-		context->processInput(window);
+		context->processCameraControl(window);
+		context->processAnimation(window);
 		context->render();
 		glfwSwapBuffers(window);
 	}
