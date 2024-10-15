@@ -49,7 +49,7 @@ std::vector<ePart> Model::getPartChildrenInfo(ePart part) {
 		{ ePart::RIGHT_LOWER_LEG, { ePart::NONE } },
 	};
 
-	return partChildrenInfo.at(part);
+	return partChildrenInfo[part];
 }
 
 PartInfo Model::getPartInfo(ePart part) {
@@ -66,7 +66,7 @@ PartInfo Model::getPartInfo(ePart part) {
 		{ ePart::RIGHT_LOWER_LEG, {"RL_LEG", glmath::vec3(0.0f, -2.0f, 0.0f), glmath::vec3(0.0f), glmath::vec3(0.0f, 1.0f, 0.0f), glmath::vec3(0.0f), glmath::vec3(1.0f, 2.0f, 1.0f), glmath::vec3(0.3f, 1.0f, 0.3f) } },  // 오른쪽 하박 (다리)
 		{ ePart::GROUND, {"RL_LEG", glmath::vec3(0.0f, -6.5f, 0.0f), glmath::vec3(0.0f), glmath::vec3(0.0f, 0.0f, 0.0f), glmath::vec3(0.0f), glmath::vec3(100.0f, 1.0f, 100.0f), glmath::vec3(0.39f, 0.39f, 0.39f) } },  // 오른쪽 하박 (다리)
 	};
-	return partInfoMap.at(part);
+	return partInfoMap[part];
 }
 
 void Model::createMesh(ePart part) {

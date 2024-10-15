@@ -3,27 +3,12 @@
 
 # include "mesh.h"
 # include "program.h"
+# include "animation.h"
 # include <cmath>
 # include <algorithm>
 # include <map>
 # include <string>
 # include <stack>
-
-enum class ePart
-{
-	BODY,
-	HEAD,
-	LEFT_UPPER_ARM,
-	LEFT_LOWER_ARM,
-	RIGHT_UPPER_ARM,
-	RIGHT_LOWER_ARM,
-	LEFT_UPPER_LEG,
-	LEFT_LOWER_LEG,
-	RIGHT_UPPER_LEG,
-	RIGHT_LOWER_LEG,
-	GROUND,
-	NONE,
-};
 
 struct PartInfo {
 	std::string name; // 파트 이름
