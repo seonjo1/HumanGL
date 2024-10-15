@@ -37,51 +37,67 @@ void Context::processCameraControl(GLFWwindow *window) {
 
 	if (!m_cameraControl) { return ; }
 
-	bool isPressW = glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS;
-	bool isPressS = glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS;
-	bool isPressD = glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS;
-	bool isPressA = glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS;
-	bool isPressE = glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS;
-	bool isPressQ = glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS;
+	bool pressW = glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS;
+	bool pressS = glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS;
+	bool pressD = glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS;
+	bool pressA = glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS;
+	bool pressE = glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS;
+	bool pressQ = glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS;
 
-	m_camera.move(isPressW, isPressS, isPressD, isPressA, isPressE, isPressQ);
+	m_camera.move(pressW, pressS, pressD, pressA, pressE, pressQ);
+}
+
+float Context::setDirection(int& inputState, bool pressUp, bool pressLeft, bool pressDown, bool pressRight) {
+	if (!pressUp && !pressLeft && !pressDown && !pressRight) {
+		return 0.0f;
+	}
+
+	inputState = inputState | eAct::WALK;
+	inputState = inputState | eAct::ROTATE;
+
+	glmath::vec2 movement(0.0f, 0.0f);
+
+	if (pressUp) {
+		movement.y += 1.0f;
+	}
+	if (pressDown) {
+		movement.y -= 1.0f;
+	}
+	if (pressLeft) {
+		movement.x += 1.0f;
+	}
+	if (pressRight) {
+		movement.x -= 1.0f;
+	}
+
+	if (glmath::length(movement) > 0.0f) {
+		movement = glmath::normalize(movement);
+	}
+	
+	float degree = std::atan2(movement.x, movement.y) * (180.0f / glmath::pi);
+
+    if (degree < 0) {
+        degree += 360.0f;
+    }
+	return degree;
 }
 
 void Context::processAnimation(GLFWwindow *window) {
 
 	int inputState = 0;
 
-	int arrowNum = 0;
-	float yaw = 0.0f;
-	if (glfwGetKey(window, GLFW_KEY_UP)) {
-		inputState = inputState | eAct::WALK;
-		arrowNum++;
-	}
-	if (glfwGetKey(window, GLFW_KEY_LEFT)) {
-		inputState = inputState | eAct::WALK;
-		yaw += 90.0f;
-		arrowNum++;
-	}
-	if (glfwGetKey(window, GLFW_KEY_DOWN)) {
-		inputState = inputState | eAct::WALK;
-		yaw += 180.0f;
-		arrowNum++;
-	}
-	if (glfwGetKey(window, GLFW_KEY_RIGHT)) {
-		inputState = inputState | eAct::WALK;
-		yaw += 270.0f;
-		arrowNum++;
-	}
+	bool pressUp = glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS;
+	bool pressLeft = glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS;
+	bool pressDown = glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS;
+	bool pressRight = glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS;
+	float yaw = setDirection(inputState, pressUp, pressLeft, pressDown, pressRight);
+
+
 	if (glfwGetKey(window, GLFW_KEY_LEFT_ALT)) {
 		inputState = inputState | eAct::JUMP;
 	}
 
-	if (arrowNum == 0) {
-		m_animationManager->changeState(inputState, yaw);
-	} else {
-		inputState = inputState | eAct::ROTATE;
-		m_animationManager->changeState(inputState, yaw / arrowNum);
-	}
+	m_animationManager->changeState(inputState, yaw);
 }
 
 bool Context::init() {
