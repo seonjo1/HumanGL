@@ -82,9 +82,6 @@ void Context::processAnimation(GLFWwindow *window) {
 		inputState = inputState | eAct::ROTATE;
 		m_animationManager->changeState(inputState, yaw / arrowNum);
 	}
-
-	std::map<ePart, Transform> transformList = m_animationManager->getTransform();
-	m_human->update(transformList);
 }
 
 bool Context::init() {
@@ -110,10 +107,11 @@ void Context::render() {
 
 	glmath::mat4 view = m_camera.getViewMatrix();
 	glmath::mat4 projection = glmath::perspective(glmath::radians(45.0f), (float)m_width / (float)m_height, 0.01f, 60.0f);
-	
+	std::map<ePart, Transform> transformList = m_animationManager->getTransform();
+
 	m_program->useProgram();
 	Model::s_stack.push(projection * view);
-	m_ground->draw(m_program.get());
-	m_human->draw(m_program.get());
+	m_ground->draw(m_program.get(), transformList);
+	m_human->draw(m_program.get(), transformList);
 	Model::s_stack.pop();
 }
