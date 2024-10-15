@@ -85,6 +85,8 @@ public:
 	float z;
 	float w;
 
+	quat();
+	quat(float x);
 	quat(float x, float y, float z, float w);
 	quat(const vec3& axis, float angle);
 	quat(const vec3& eulerAngle);
