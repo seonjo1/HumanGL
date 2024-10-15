@@ -10,7 +10,8 @@ set(WINDOW_HEIGHT 1080)
 project(${PROJECT_NAME})
 set(SRC src/main.cpp src/context.cpp src/glmath.cpp src/program.cpp
 		src/vertexArray.cpp src/buffer.cpp src/shader.cpp src/glload.cpp
-		src/mesh.cpp src/model.cpp src/camera.cpp src/animation.cpp)
+		src/mesh.cpp src/model.cpp src/camera.cpp src/animation.cpp
+		src/action.cpp)
 
 add_executable(${PROJECT_NAME} ${SRC})
 
