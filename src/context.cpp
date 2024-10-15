@@ -33,7 +33,7 @@ void Context::mouseMove(double x, double y) {
 	m_camera.rotate(pos);
 }
 
-void Context::processInput(GLFWwindow *window) {
+void Context::processCameraControl(GLFWwindow *window) {
 
 	if (!m_cameraControl) { return ; }
 
@@ -47,10 +47,51 @@ void Context::processInput(GLFWwindow *window) {
 	m_camera.move(isPressW, isPressS, isPressD, isPressA, isPressE, isPressQ);
 }
 
+void Context::processAnimation(GLFWwindow *window) {
+
+	int inputState = 0;
+
+	int arrowNum = 0;
+	float yaw = 0.0f;
+	if (glfwGetKey(window, GLFW_KEY_UP)) {
+		inputState = inputState | eAct::WALK;
+		arrowNum++;
+	}
+	if (glfwGetKey(window, GLFW_KEY_LEFT)) {
+		inputState = inputState | eAct::WALK;
+		yaw += 90.0f;
+		arrowNum++;
+	}
+	if (glfwGetKey(window, GLFW_KEY_DOWN)) {
+		inputState = inputState | eAct::WALK;
+		yaw += 180.0f;
+		arrowNum++;
+	}
+	if (glfwGetKey(window, GLFW_KEY_RIGHT)) {
+		inputState = inputState | eAct::WALK;
+		yaw += 270.0f;
+		arrowNum++;
+	}
+	if (glfwGetKey(window, GLFW_KEY_LEFT_ALT)) {
+		inputState = inputState | eAct::JUMP;
+	}
+
+	if (arrowNum == 0) {
+		m_animationManager->changeState(inputState, yaw);
+	} else {
+		inputState = inputState | eAct::ROTATE;
+		m_animationManager->changeState(inputState, yaw / arrowNum);
+	}
+
+	std::map<ePart, Transform> transformList = m_animationManager->getTransform();
+	m_human->update(transformList);
+}
+
 bool Context::init() {
 
 	m_human = Model::createHuman();
 	m_ground = Model::createGround();
+	m_animationManager = Animation::createAnimationManager();
 	m_program = Program::create("./shader/simple.vs", "./shader/simple.fs");
 
 	if (!m_human || !m_program) { return false; }

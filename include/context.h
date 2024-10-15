@@ -13,7 +13,8 @@ class Context {
 public:
 	static std::unique_ptr<Context> create();
 	void render();
-	void processInput(GLFWwindow *window);
+	void processCameraControl(GLFWwindow *window);
+	void processAnimation(GLFWwindow *window);
 	void reshape(int width, int height);
 	void mouseMove(double x, double y);
 	void mouseButton(int button, int action, double x, double y);
@@ -31,6 +32,7 @@ private:
 	std::unique_ptr<Model> m_human;
 	std::unique_ptr<Model> m_ground;
 	std::unique_ptr<Program> m_program;
+	std::unique_ptr<Animation> m_animationManager;
 };
 
 #endif
