@@ -10,7 +10,7 @@
 # include <stack>
 
 struct PartInfo {
-	std::string name; // 파트 이름
+	ePart part; // 파트
     glmath::vec3 position;    // 각 파트의 상대 위치
 	glmath::vec3 translation; // 각 파트의 이동
 	glmath::vec3 rotateTranslation; // 각 파트의 회전축으로의 이동
@@ -25,6 +25,7 @@ public:
 	static std::unique_ptr<Model> createGround();
 	static std::stack<glmath::mat4> s_stack;
 	void draw(Program* program);
+	void update(std::map<ePart, Transform>& transformList);
 
 private:
 	void createMesh(ePart part);

@@ -16,8 +16,6 @@ std::unique_ptr<Model> Model::createHuman(ePart part) {
 		return nullptr;
 	}
 
-	std::cout << "Part " << model->m_partInfo.name << " is complete!\n";
-
 	return model;
 }
 
@@ -54,17 +52,17 @@ std::vector<ePart> Model::getPartChildrenInfo(ePart part) {
 
 PartInfo Model::getPartInfo(ePart part) {
 	static std::map<ePart, PartInfo> partInfoMap = {
-		{ ePart::BODY, {"BODY", glmath::vec3(0.0f, 0.0f, 0.0f), glmath::vec3(0.0f), glmath::vec3(0.0f), glmath::quat(0.0f), glmath::vec3(2.0f, 4.0f, 1.0f), glmath::vec3(1.0f, 0.5f, 0.3f) } },  // 몸통
-		{ ePart::HEAD, {"HEAD", glmath::vec3(0.0f, 2.5f, 0.0f), glmath::vec3(0.0f), glmath::vec3(0.0f), glmath::quat(0.0f), glmath::vec3(1.0f), glmath::vec3(0.95f, 0.80f, 0.72f) } },  // 머리
-		{ ePart::LEFT_UPPER_ARM, {"LU_ARM", glmath::vec3(-1.5f, 1.0f, 0.0f), glmath::vec3(0.0f), glmath::vec3(0.0f, 1.0f, 0.0f), glmath::quat(0.0f), glmath::vec3(1.0f, 2.0f, 1.0f), glmath::vec3(0.95f, 0.80f, 0.72f) } }, // 왼쪽 상박
-		{ ePart::LEFT_LOWER_ARM, {"LL_ARM", glmath::vec3(0.0f, -2.0f, 0.0f), glmath::vec3(0.0f), glmath::vec3(0.0f, 1.0f, 0.0f), glmath::quat(0.0f), glmath::vec3(1.0f, 2.0f, 1.0f), glmath::vec3(0.95f, 0.80f, 0.72f) } }, // 왼쪽 하박
-		{ ePart::RIGHT_UPPER_ARM, {"RU_ARM", glmath::vec3(1.5f, 1.0f, 0.0f), glmath::vec3(0.0f), glmath::vec3(0.0f, 1.0f, 0.0f), glmath::quat(0.0f), glmath::vec3(1.0f, 2.0f, 1.0f), glmath::vec3(0.95f, 0.80f, 0.72f) } }, // 오른쪽 상박
-		{ ePart::RIGHT_LOWER_ARM, {"RL_ARM", glmath::vec3(0.0f, -2.0f, 0.0f), glmath::vec3(0.0f), glmath::vec3(0.0f, 1.0f, 0.0f), glmath::quat(0.0f), glmath::vec3(1.0f, 2.0f, 1.0f), glmath::vec3(0.95f, 0.80f, 0.72f) } }, // 오른쪽 하박
-		{ ePart::LEFT_UPPER_LEG, {"LU_LEG", glmath::vec3(-0.5f, -3.0f, 0.0f), glmath::vec3(0.0f), glmath::vec3(0.0f, 1.0f, 0.0f), glmath::quat(0.0f), glmath::vec3(1.0f, 2.0f, 1.0f), glmath::vec3(0.3f, 1.0f, 0.3f) } }, // 왼쪽 상박 (다리)
-		{ ePart::LEFT_LOWER_LEG, {"LL_LEG", glmath::vec3(0.0f, -2.0f, 0.0f), glmath::vec3(0.0f), glmath::vec3(0.0f, 1.0f, 0.0f), glmath::quat(0.0f), glmath::vec3(1.0f, 2.0f, 1.0f), glmath::vec3(0.3f, 1.0f, 0.3f) } }, // 왼쪽 하박 (다리)
-		{ ePart::RIGHT_UPPER_LEG, {"RU_LEG", glmath::vec3(0.5f, -3.0f, 0.0f), glmath::vec3(0.0f), glmath::vec3(0.0f, 1.0f, 0.0f), glmath::quat(0.0f), glmath::vec3(1.0f, 2.0f, 1.0f), glmath::vec3(0.3f, 1.0f, 0.3f) } }, // 오른쪽 상박 (다리)
-		{ ePart::RIGHT_LOWER_LEG, {"RL_LEG", glmath::vec3(0.0f, -2.0f, 0.0f), glmath::vec3(0.0f), glmath::vec3(0.0f, 1.0f, 0.0f), glmath::quat(0.0f), glmath::vec3(1.0f, 2.0f, 1.0f), glmath::vec3(0.3f, 1.0f, 0.3f) } },  // 오른쪽 하박 (다리)
-		{ ePart::GROUND, {"GROUND", glmath::vec3(0.0f, -6.5f, 0.0f), glmath::vec3(0.0f), glmath::vec3(0.0f, 0.0f, 0.0f), glmath::quat(0.0f), glmath::vec3(100.0f, 1.0f, 100.0f), glmath::vec3(0.39f, 0.39f, 0.39f) } },  // 오른쪽 하박 (다리)
+		{ ePart::BODY, {ePart::BODY, glmath::vec3(0.0f, 6.0f, 0.0f), glmath::vec3(0.0f), glmath::vec3(0.0f), glmath::quat(0.0f), glmath::vec3(2.0f, 4.0f, 1.0f), glmath::vec3(1.0f, 0.5f, 0.3f) } },  // 몸통
+		{ ePart::HEAD, {ePart::HEAD, glmath::vec3(0.0f, 2.5f, 0.0f), glmath::vec3(0.0f), glmath::vec3(0.0f), glmath::quat(0.0f), glmath::vec3(1.0f), glmath::vec3(0.95f, 0.80f, 0.72f) } },  // 머리
+		{ ePart::LEFT_UPPER_ARM, {ePart::LEFT_UPPER_ARM, glmath::vec3(-1.5f, 1.0f, 0.0f), glmath::vec3(0.0f), glmath::vec3(0.0f, 1.0f, 0.0f), glmath::quat(0.0f), glmath::vec3(1.0f, 2.0f, 1.0f), glmath::vec3(0.95f, 0.80f, 0.72f) } }, // 왼쪽 상박
+		{ ePart::LEFT_LOWER_ARM, {ePart::LEFT_LOWER_ARM, glmath::vec3(0.0f, -2.0f, 0.0f), glmath::vec3(0.0f), glmath::vec3(0.0f, 1.0f, 0.0f), glmath::quat(0.0f), glmath::vec3(1.0f, 2.0f, 1.0f), glmath::vec3(0.95f, 0.80f, 0.72f) } }, // 왼쪽 하박
+		{ ePart::RIGHT_UPPER_ARM, {ePart::RIGHT_UPPER_ARM, glmath::vec3(1.5f, 1.0f, 0.0f), glmath::vec3(0.0f), glmath::vec3(0.0f, 1.0f, 0.0f), glmath::quat(0.0f), glmath::vec3(1.0f, 2.0f, 1.0f), glmath::vec3(0.95f, 0.80f, 0.72f) } }, // 오른쪽 상박
+		{ ePart::RIGHT_LOWER_ARM, {ePart::RIGHT_LOWER_ARM, glmath::vec3(0.0f, -2.0f, 0.0f), glmath::vec3(0.0f), glmath::vec3(0.0f, 1.0f, 0.0f), glmath::quat(0.0f), glmath::vec3(1.0f, 2.0f, 1.0f), glmath::vec3(0.95f, 0.80f, 0.72f) } }, // 오른쪽 하박
+		{ ePart::LEFT_UPPER_LEG, {ePart::LEFT_UPPER_LEG, glmath::vec3(-0.5f, -3.0f, 0.0f), glmath::vec3(0.0f), glmath::vec3(0.0f, 1.0f, 0.0f), glmath::quat(0.0f), glmath::vec3(1.0f, 2.0f, 1.0f), glmath::vec3(0.3f, 1.0f, 0.3f) } }, // 왼쪽 상박 (다리)
+		{ ePart::LEFT_LOWER_LEG, {ePart::LEFT_LOWER_LEG, glmath::vec3(0.0f, -2.0f, 0.0f), glmath::vec3(0.0f), glmath::vec3(0.0f, 1.0f, 0.0f), glmath::quat(0.0f), glmath::vec3(1.0f, 2.0f, 1.0f), glmath::vec3(0.3f, 1.0f, 0.3f) } }, // 왼쪽 하박 (다리)
+		{ ePart::RIGHT_UPPER_LEG, {ePart::RIGHT_UPPER_LEG, glmath::vec3(0.5f, -3.0f, 0.0f), glmath::vec3(0.0f), glmath::vec3(0.0f, 1.0f, 0.0f), glmath::quat(0.0f), glmath::vec3(1.0f, 2.0f, 1.0f), glmath::vec3(0.3f, 1.0f, 0.3f) } }, // 오른쪽 상박 (다리)
+		{ ePart::RIGHT_LOWER_LEG, {ePart::RIGHT_LOWER_LEG, glmath::vec3(0.0f, -2.0f, 0.0f), glmath::vec3(0.0f), glmath::vec3(0.0f, 1.0f, 0.0f), glmath::quat(0.0f), glmath::vec3(1.0f, 2.0f, 1.0f), glmath::vec3(0.3f, 1.0f, 0.3f) } },  // 오른쪽 하박 (다리)
+		{ ePart::GROUND, {ePart::GROUND, glmath::vec3(0.0f, -0.5f, 0.0f), glmath::vec3(0.0f), glmath::vec3(0.0f, 0.0f, 0.0f), glmath::quat(0.0f), glmath::vec3(100.0f, 1.0f, 100.0f), glmath::vec3(0.39f, 0.39f, 0.39f) } },  // 오른쪽 하박 (다리)
 	};
 	return partInfoMap[part];
 }
@@ -94,4 +92,13 @@ void Model::draw(Program* program) {
 	}
 
 	s_stack.pop();
+}
+
+void Model::update(std::map<ePart, Transform>& transformList) {
+	m_partInfo.translation = transformList[m_partInfo.part].translation;
+	m_partInfo.rotation = transformList[m_partInfo.part].rotation;
+	m_partInfo.scale = transformList[m_partInfo.part].scale;
+	for (std::unique_ptr<Model>& child : m_children) {
+		child->update(transformList);
+	}
 }
