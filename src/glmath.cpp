@@ -369,6 +369,10 @@ glmath::vec3 glmath::cross(const glmath::vec3& vector1, const glmath::vec3& vect
 						vector1.x * vector2.y - vector1.y * vector2.x);
 }
 
+float glmath::length(const glmath::vec2& vector) {
+	return std::sqrt(vector.x * vector.x + vector.y * vector.y);
+}
+
 glmath::vec2 glmath::normalize(const glmath::vec2& vector) {
 	float magnitude = 0;
 	for (int i = 0; i < 2; i++) {

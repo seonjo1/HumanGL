@@ -117,6 +117,8 @@ float dot(const vec3& vector1, const vec3& vector2);
 float dot(const vec4& vector1, const vec4& vector2);
 vec3 cross(const vec3& vector1, const vec3& vector2);
 
+float length(const vec2& vector);
+
 vec2 normalize(const vec2& vector);
 vec3 normalize(const vec3& vector);
 vec4 normalize(const vec4& vector);
