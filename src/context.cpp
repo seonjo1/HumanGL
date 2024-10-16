@@ -47,7 +47,7 @@ void Context::processCameraControl(GLFWwindow *window) {
 	m_camera.move(pressW, pressS, pressD, pressA, pressE, pressQ);
 }
 
-float Context::setDirection(int& inputState, bool pressUp, bool pressLeft, bool pressDown, bool pressRight) {
+glmath::vec3 Context::setDirection(int& inputState, bool pressUp, bool pressLeft, bool pressDown, bool pressRight) {
 	if (!pressUp && !pressLeft && !pressDown && !pressRight) {
 		return 0.0f;
 	}
@@ -55,31 +55,26 @@ float Context::setDirection(int& inputState, bool pressUp, bool pressLeft, bool 
 	inputState = inputState | eAct::WALK;
 	inputState = inputState | eAct::ROTATE;
 
-	glmath::vec2 movement(0.0f, 0.0f);
+	glmath::vec3 movement(0.0f);
 
 	if (pressUp) {
-		movement.y += 1.0f;
+		movement.z -= 1.0f;
 	}
 	if (pressDown) {
-		movement.y -= 1.0f;
+		movement.z += 1.0f;
 	}
 	if (pressLeft) {
-		movement.x += 1.0f;
+		movement.x -= 1.0f;
 	}
 	if (pressRight) {
-		movement.x -= 1.0f;
+		movement.x += 1.0f;
 	}
 
 	if (glmath::length(movement) > 0.0f) {
 		movement = glmath::normalize(movement);
 	}
 	
-	float degree = std::atan2(movement.x, movement.y) * (180.0f / glmath::pi);
-
-    if (degree < 0) {
-        degree += 360.0f;
-    }
-	return degree;
+	return movement;
 }
 
 void Context::processAnimation(GLFWwindow *window) {
@@ -90,14 +85,14 @@ void Context::processAnimation(GLFWwindow *window) {
 	bool pressLeft = glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS;
 	bool pressDown = glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS;
 	bool pressRight = glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS;
-	float yaw = setDirection(inputState, pressUp, pressLeft, pressDown, pressRight);
+	glmath::vec3 dir = setDirection(inputState, pressUp, pressLeft, pressDown, pressRight);
 
 
 	if (glfwGetKey(window, GLFW_KEY_LEFT_ALT)) {
 		inputState = inputState | eAct::JUMP;
 	}
 
-	m_animationManager->changeState(inputState, yaw);
+	m_animationManager->changeState(inputState, dir);
 }
 
 bool Context::init() {

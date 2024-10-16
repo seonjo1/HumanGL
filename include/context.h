@@ -22,7 +22,7 @@ public:
 private:
 	Context() {};
 	bool init();
-	float setDirection(int& inputState, bool pressUp, bool pressLeft, bool pressDown, bool pressRight);
+	glmath::vec3 setDirection(int& inputState, bool pressUp, bool pressLeft, bool pressDown, bool pressRight);
 
 	int m_width {WINDOW_WIDTH};
 	int m_height {WINDOW_HEIGHT};
