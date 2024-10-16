@@ -7,7 +7,7 @@
 class Animation {
 public:
 	static std::unique_ptr<Animation> createAnimationManager();
-	void changeState(int inputState, float yaw);
+	void changeState(const int inputState, const glmath::vec3& dir);
 	std::map<ePart,Transform> getTransform();
 
 private:

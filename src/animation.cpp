@@ -12,6 +12,11 @@ Animation::Animation() {
 	for (int part = static_cast<int>(ePart::BODY); part < static_cast<int>(ePart::NONE); part++) {
 		m_transformList[static_cast<ePart>(part)] = Transform();
 	}
+
+	m_objectInfo.velocity = glmath::vec3(0.0f);
+	m_objectInfo.position = glmath::vec3(0.0f);
+	m_objectInfo.direction = glmath::vec3(0.0f, 0.0f, -1.0f);
+	m_objectInfo.destDirection = glmath::vec3(0.0f, 0.0f, -1.0f);
 }
 
 
@@ -22,16 +27,37 @@ std::unique_ptr<Animation> Animation::createAnimationManager() {
 }
 
 
-void Animation::changeState(int inputState, float yaw) {
+void Animation::changeState(const int inputState, const glmath::vec3& dir) {
+	if (!inputState && !m_state) {
+		m_state = static_cast<int>(eAct::STOP);
+		return ;
+	} else {
+		m_state = m_state & ~static_cast<int>(eAct::STOP);
+	}
+
 	if (inputState & eAct::ROTATE) {
-		m_objectInfo.destYaw = yaw;
+		m_objectInfo.destDirection = dir;
 		m_state = m_state | eAct::ROTATE;
+	}
+
+	if (m_state & eAct::JUMP) {
+		return ;
+	}
+
+	if (inputState & eAct::JUMP) {
+		m_state = m_state & eAct::ROTATE;
+		m_state = m_state | eAct::JUMP;
+		return ;
+	}
+
+	if (inputState & eAct::WALK) {
+		m_state = m_state | eAct::WALK;
 	}
 }
 
 std::map<ePart,Transform> Animation::getTransform() {
 
-	static int size = m_actionList.size() - 1;
+	static int size = m_actionList.size();
 	std::vector<eAct> actions;
 
 	for (int i = 0; i < size; i++) {
