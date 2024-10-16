@@ -14,7 +14,7 @@ private:
 	Animation();
 	
 	int m_state;
-	ObjectInfo m_objectInfo;
+	std::map<ePart, ObjectInfo> m_objectInfoList;
 	std::map<ePart, Transform> m_transformList;
 	std::map<eAct, std::unique_ptr<Action>> m_actionList;
 };

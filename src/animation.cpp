@@ -11,12 +11,8 @@ Animation::Animation() {
 
 	for (int part = static_cast<int>(ePart::BODY); part < static_cast<int>(ePart::NONE); part++) {
 		m_transformList[static_cast<ePart>(part)] = Transform();
+		m_objectInfoList[static_cast<ePart>(part)] = ObjectInfo();
 	}
-
-	m_objectInfo.velocity = glmath::vec3(0.0f);
-	m_objectInfo.position = glmath::vec3(0.0f);
-	m_objectInfo.direction = glmath::vec3(0.0f, 0.0f, -1.0f);
-	m_objectInfo.destDirection = glmath::vec3(0.0f, 0.0f, -1.0f);
 }
 
 
@@ -36,7 +32,7 @@ void Animation::changeState(const int inputState, const glmath::vec3& dir) {
 	}
 
 	if (inputState & eAct::ROTATE) {
-		m_objectInfo.destDirection = dir;
+		m_objectInfoList[ePart::BODY].targetDirection = dir;
 		m_state = m_state | eAct::ROTATE;
 	}
 
@@ -67,7 +63,7 @@ std::map<ePart,Transform> Animation::getTransform() {
 	}
 
 	for (eAct action : actions) {
-		m_state = m_state & m_actionList[action]->doAction(m_transformList, m_objectInfo);
+		m_state = m_state & m_actionList[action]->doAction(m_transformList, m_objectInfoList);
 	}
 
 	return m_transformList;
