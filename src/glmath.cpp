@@ -68,6 +68,9 @@ glmath::vec3::vec3(float x, float y, float z)
 glmath::vec3::vec3(const vec3& copy)
 	: x(copy.x), y(copy.y), z(copy.z) {};
 
+glmath::vec3::vec3(const vec4& copy)
+	: x(copy.x), y(copy.y), z(copy.z) {};
+
 glmath::vec3& glmath::vec3::operator=(const glmath::vec3& copy) {
 	this->x = copy.x;
 	this->y = copy.y;
@@ -123,6 +126,9 @@ glmath::vec4::vec4(float x)
 
 glmath::vec4::vec4(float x, float y, float z, float w)
 	: x(x), y(y), z(z), w(w) {};
+
+glmath::vec4::vec4(const vec3& copy, float w)
+	: x(copy.x), y(copy.y), z(copy.z), w(w) {};
 
 glmath::vec4::vec4(const vec4& copy)
 	: x(copy.x), y(copy.y), z(copy.z), w(copy.w) {};
@@ -371,6 +377,10 @@ glmath::vec3 glmath::cross(const glmath::vec3& vector1, const glmath::vec3& vect
 
 float glmath::length(const glmath::vec2& vector) {
 	return std::sqrt(vector.x * vector.x + vector.y * vector.y);
+}
+
+float glmath::length(const glmath::vec3& vector) {
+	return std::sqrt(vector.x * vector.x + vector.y * vector.y + vector.z * vector.z);
 }
 
 glmath::vec2 glmath::normalize(const glmath::vec2& vector) {

@@ -25,6 +25,8 @@ public:
 	float operator[](int idx) const;
 };
 
+class vec4;
+
 class vec3 {
 public:
 	float x;
@@ -35,6 +37,7 @@ public:
 	vec3(float x);
 	vec3(float x, float y, float z);
 	vec3(const vec3& copy);
+	vec3(const vec4& copy);
 	vec3& operator=(const vec3& copy);
 	vec3 operator+(const vec3& rhs) const;
 	vec3 operator-(const vec3& rhs) const;
@@ -53,6 +56,7 @@ public:
 	vec4();
 	vec4(float x);
 	vec4(float x, float y, float z, float w);
+	vec4(const vec3& copy, float w);
 	vec4(const vec4& copy);
 	vec4& operator=(const vec4& copy);
 	vec4 operator+(const vec4& rhs) const;
@@ -118,6 +122,7 @@ float dot(const vec4& vector1, const vec4& vector2);
 vec3 cross(const vec3& vector1, const vec3& vector2);
 
 float length(const vec2& vector);
+float length(const vec3& vector);
 
 vec2 normalize(const vec2& vector);
 vec3 normalize(const vec3& vector);
