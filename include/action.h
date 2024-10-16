@@ -46,8 +46,9 @@ struct Transform {
 struct ObjectInfo {
 	glmath::vec3 velocity;
 	glmath::vec3 position;
+	glmath::vec3 direction;
+	glmath::vec3 destDirection;
 	float yaw {0.0f};
-	float destYaw {0.0f};
 };
 
 Transform operator*(const Transform& t1, const Transform& t2);

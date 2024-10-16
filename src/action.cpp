@@ -27,40 +27,37 @@ int Stop::doAction(std::map<ePart, Transform>& transformList, ObjectInfo& objinf
 }
 
 int Rotate::doAction(std::map<ePart, Transform>& transformList, ObjectInfo& objectInfo) {
-	static float rotateSpeed = 1.0f;
+	static float rotateSpeed = glmath::radians(1.0f);
 	
-	float deltaYaw = objectInfo.destYaw - objectInfo.yaw;
-	if (deltaYaw < 0.0f) {
-		if (deltaYaw < -180.0f) {
-			objectInfo.yaw += std::min(360.f + deltaYaw, rotateSpeed);
-		} else {
-			objectInfo.yaw -= std::min(-deltaYaw, rotateSpeed);
+	if (glmath::cross(objectInfo.direction, objectInfo.destDirection).y >= 0) {
+		objectInfo.direction = glmath::rotate(glmath::mat4(1.0f), rotateSpeed, glmath::vec3(0.0f, 1.0f, 0.0f)) * glmath::vec4(objectInfo.direction, 0.0f);
+		if (glmath::cross(objectInfo.direction, objectInfo.destDirection).y < 0) {
+			objectInfo.direction = objectInfo.destDirection;
 		}
 	} else {
-		if (deltaYaw > 180.0f) {
-			objectInfo.yaw -= std::min(360.f - deltaYaw, rotateSpeed);
-		} else {
-			objectInfo.yaw += std::min(deltaYaw, rotateSpeed);
+		objectInfo.direction = glmath::rotate(glmath::mat4(1.0f), -rotateSpeed, glmath::vec3(0.0f, 1.0f, 0.0f)) * glmath::vec4(objectInfo.direction, 0.0f);
+		if (glmath::cross(objectInfo.direction, objectInfo.destDirection).y > 0) {
+			objectInfo.direction = objectInfo.destDirection;
 		}
 	}
 
-	if (objectInfo.yaw < 0.0f) { objectInfo.yaw += 360.0f; }
-	if (objectInfo.yaw > 360.0f) { objectInfo.yaw -= 360.0f; }
+	objectInfo.yaw = std::atan2(-objectInfo.direction.x, -objectInfo.direction.z);
 
-	transformList[ePart::BODY].rotation = glmath::quat(glmath::vec3(0.0f, 1.0f, 0.0f), glmath::radians(objectInfo.yaw));
+	if (objectInfo.yaw < 0) { objectInfo.yaw += 2 * glmath::pi; }
+	if (objectInfo.yaw > glmath::pi * 2) { objectInfo.yaw -= 2 * glmath::pi; }
 
-	if (objectInfo.yaw == objectInfo.destYaw) {
-		return ~static_cast<int>(eAct::ROTATE);
-	} else {
-		return static_cast<int>(eAct::FULLBIT);
-	}
+	transformList[ePart::BODY].rotation = glmath::quat(glmath::vec3(0.0f, 1.0f, 0.0f), objectInfo.yaw);
+
+	return ~static_cast<int>(eAct::ROTATE);
 }
 
 int Jump::doAction(std::map<ePart, Transform>& transformList, ObjectInfo& objinfo) {
-	return static_cast<int>(eAct::FULLBIT);
+	return ~static_cast<int>(eAct::JUMP);
 }
 
 int Walk::doAction(std::map<ePart, Transform>& transformList, ObjectInfo& objinfo) {
-	return static_cast<int>(eAct::FULLBIT);
+	static float moveeSpeed = 0.1f;
+
+	return ~static_cast<int>(eAct::WALK);
 }
 
