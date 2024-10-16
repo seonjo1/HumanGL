@@ -22,41 +22,44 @@ Transform operator*(const Transform& t1, const Transform& t2) {
 	return transform;
 }
 
-int Stop::doAction(std::map<ePart, Transform>& transformList, ObjectInfo& objinfo) {
+int Stop::doAction(std::map<ePart, Transform>& transformList, std::map<ePart, ObjectInfo>& objectInfoList) {
 	return static_cast<int>(eAct::FULLBIT);
 }
 
-int Rotate::doAction(std::map<ePart, Transform>& transformList, ObjectInfo& objectInfo) {
-	static float rotateSpeed = glmath::radians(1.0f);
+int Rotate::doAction(std::map<ePart, Transform>& transformList, std::map<ePart, ObjectInfo>& objectInfoList) {
+	static float rotateSpeed = glmath::radians(5.0f);
 	
-	if (glmath::cross(objectInfo.direction, objectInfo.destDirection).y >= 0) {
-		objectInfo.direction = glmath::rotate(glmath::mat4(1.0f), rotateSpeed, glmath::vec3(0.0f, 1.0f, 0.0f)) * glmath::vec4(objectInfo.direction, 0.0f);
-		if (glmath::cross(objectInfo.direction, objectInfo.destDirection).y < 0) {
-			objectInfo.direction = objectInfo.destDirection;
+	if (glmath::cross(objectInfoList[ePart::BODY].currentDirection, objectInfoList[ePart::BODY].targetDirection).y >= 0) {
+		objectInfoList[ePart::BODY].currentDirection = glmath::rotate(glmath::mat4(1.0f), rotateSpeed, glmath::vec3(0.0f, 1.0f, 0.0f)) * glmath::vec4(objectInfoList[ePart::BODY].currentDirection, 0.0f);
+		if (glmath::cross(objectInfoList[ePart::BODY].currentDirection, objectInfoList[ePart::BODY].targetDirection).y < 0) {
+			objectInfoList[ePart::BODY].currentDirection = objectInfoList[ePart::BODY].targetDirection;
 		}
 	} else {
-		objectInfo.direction = glmath::rotate(glmath::mat4(1.0f), -rotateSpeed, glmath::vec3(0.0f, 1.0f, 0.0f)) * glmath::vec4(objectInfo.direction, 0.0f);
-		if (glmath::cross(objectInfo.direction, objectInfo.destDirection).y > 0) {
-			objectInfo.direction = objectInfo.destDirection;
+		objectInfoList[ePart::BODY].currentDirection = glmath::rotate(glmath::mat4(1.0f), -rotateSpeed, glmath::vec3(0.0f, 1.0f, 0.0f)) * glmath::vec4(objectInfoList[ePart::BODY].currentDirection, 0.0f);
+		if (glmath::cross(objectInfoList[ePart::BODY].currentDirection, objectInfoList[ePart::BODY].targetDirection).y > 0) {
+			objectInfoList[ePart::BODY].currentDirection = objectInfoList[ePart::BODY].targetDirection;
 		}
 	}
 
-	objectInfo.yaw = std::atan2(-objectInfo.direction.x, -objectInfo.direction.z);
+	objectInfoList[ePart::BODY].currentAngle.y = std::atan2(-objectInfoList[ePart::BODY].currentDirection.x, -objectInfoList[ePart::BODY].currentDirection.z);
 
-	if (objectInfo.yaw < 0) { objectInfo.yaw += 2 * glmath::pi; }
-	if (objectInfo.yaw > glmath::pi * 2) { objectInfo.yaw -= 2 * glmath::pi; }
+	if (objectInfoList[ePart::BODY].currentAngle.y < 0) { objectInfoList[ePart::BODY].currentAngle.y += 2 * glmath::pi; }
+	if (objectInfoList[ePart::BODY].currentAngle.y > glmath::pi * 2) { objectInfoList[ePart::BODY].currentAngle.y -= 2 * glmath::pi; }
 
-	transformList[ePart::BODY].rotation = glmath::quat(glmath::vec3(0.0f, 1.0f, 0.0f), objectInfo.yaw);
+	transformList[ePart::BODY].rotation = glmath::quat(glmath::vec3(0.0f, 1.0f, 0.0f), objectInfoList[ePart::BODY].currentAngle.y);
 
 	return ~static_cast<int>(eAct::ROTATE);
 }
 
-int Jump::doAction(std::map<ePart, Transform>& transformList, ObjectInfo& objinfo) {
+int Jump::doAction(std::map<ePart, Transform>& transformList, std::map<ePart, ObjectInfo>& objectInfoList) {
 	return ~static_cast<int>(eAct::JUMP);
 }
 
-int Walk::doAction(std::map<ePart, Transform>& transformList, ObjectInfo& objinfo) {
-	static float moveeSpeed = 0.1f;
+int Walk::doAction(std::map<ePart, Transform>& transformList, std::map<ePart, ObjectInfo>& objectInfoList) {
+	static float moveSpeed = 0.1f;
+
+	objectInfoList[ePart::BODY].translation = objectInfoList[ePart::BODY].translation + moveSpeed * objectInfoList[ePart::BODY].targetDirection;
+	transformList[ePart::BODY].translation = objectInfoList[ePart::BODY].translation;
 
 	return ~static_cast<int>(eAct::WALK);
 }

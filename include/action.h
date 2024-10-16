@@ -22,6 +22,11 @@ bool operator==(int bit, eAct act);
 enum class ePart
 {
 	BODY,
+	HAIR,
+	LEFT_EYE,
+	RIGHT_EYE,
+	NOSE,
+	MOUSE,
 	HEAD,
 	LEFT_UPPER_ARM,
 	LEFT_LOWER_ARM,
@@ -45,43 +50,48 @@ struct Transform {
 
 struct ObjectInfo {
 	glmath::vec3 velocity;
-	glmath::vec3 position;
-	glmath::vec3 direction;
-	glmath::vec3 destDirection;
-	float yaw {0.0f};
+	glmath::vec3 translation;
+	glmath::vec3 currentAngle;
+	glmath::vec3 targetAngle;
+	glmath::vec3 currentDirection;
+	glmath::vec3 targetDirection;
+
+	ObjectInfo()
+		: velocity(glmath::vec3(0.0f)), translation(glmath::vec3(0.0f)),
+		  currentAngle(glmath::vec3(0.0f)), targetAngle(glmath::vec3(0.0f)),
+		  currentDirection(glmath::vec3(0.0f, 0.0f, -1.0f)), targetDirection(glmath::vec3(0.0f, 0.0f, -1.0f)) {};
 };
 
 Transform operator*(const Transform& t1, const Transform& t2);
 
 class Action {
 public:
-	virtual int doAction(std::map<ePart, Transform>& transformList, ObjectInfo& objinfo) = 0;
+	virtual int doAction(std::map<ePart, Transform>& transformList, std::map<ePart, ObjectInfo>& objectInfoList) = 0;
 	virtual ~Action() = default;
 };
 
 class Stop : public Action {
 public:
-	virtual int doAction(std::map<ePart, Transform>& transformList, ObjectInfo& objinfo) override;
+	virtual int doAction(std::map<ePart, Transform>& transformList, std::map<ePart, ObjectInfo>& objectInfoList) override;
 	virtual ~Stop() override = default;
 };
 
 class Rotate : public Action {
 public:
-	virtual int doAction(std::map<ePart, Transform>& transformList, ObjectInfo& objinfo) override;
+	virtual int doAction(std::map<ePart, Transform>& transformList, std::map<ePart, ObjectInfo>& objectInfoList) override;
 	virtual ~Rotate() override = default;
 };
 
 class Jump : public Action {
 public:
-	virtual int doAction(std::map<ePart, Transform>& transformList, ObjectInfo& objinfo) override;
+	virtual int doAction(std::map<ePart, Transform>& transformList, std::map<ePart, ObjectInfo>& objectInfoList) override;
 	virtual ~Jump() override = default;
 };
 
 class Walk : public Action {
 public:
-	virtual int doAction(std::map<ePart, Transform>& transformList, ObjectInfo& objinfo) override;
+	virtual int doAction(std::map<ePart, Transform>& transformList, std::map<ePart, ObjectInfo>& objectInfoList) override;
 	virtual ~Walk() override = default;
 };
-
 
 #endif
