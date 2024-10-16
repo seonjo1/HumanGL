@@ -49,11 +49,8 @@ void Context::processCameraControl(GLFWwindow *window) {
 
 glmath::vec3 Context::setDirection(int& inputState, bool pressUp, bool pressLeft, bool pressDown, bool pressRight) {
 	if (!pressUp && !pressLeft && !pressDown && !pressRight) {
-		return 0.0f;
+		return glmath::vec3(0.0f);
 	}
-
-	inputState = inputState | eAct::WALK;
-	inputState = inputState | eAct::ROTATE;
 
 	glmath::vec3 movement(0.0f);
 
@@ -70,10 +67,15 @@ glmath::vec3 Context::setDirection(int& inputState, bool pressUp, bool pressLeft
 		movement.x += 1.0f;
 	}
 
-	if (glmath::length(movement) > 0.0f) {
-		movement = glmath::normalize(movement);
+	if (glmath::length(movement) < 1.0f) {
+		return glmath::vec3(0.0f);
 	}
 	
+	movement = glmath::normalize(movement);
+
+	inputState = inputState | eAct::WALK;
+	inputState = inputState | eAct::ROTATE;
+
 	return movement;
 }
 
