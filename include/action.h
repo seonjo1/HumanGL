@@ -77,7 +77,7 @@ public:
 	virtual ~Action() = default;
 protected:
 	static float walkTheta;
-	static float stopTheta;
+	static float breathTheta;
 };
 
 class Stop : public Action {

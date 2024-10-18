@@ -1,7 +1,7 @@
 #include "../include/action.h"
 
 float Action::walkTheta = 0.0f;
-float Action::stopTheta = 0.0f;
+float Action::breathTheta = 0.0f;
 
 int operator&(int bit, eAct act) {
 	return bit & static_cast<int>(act);
@@ -41,62 +41,65 @@ int Stop::doAction(std::map<ePart, Transform>& transformList, std::map<ePart, Ob
 	static const float yMin = -0.3f;
 	static const float breath = 0.005f;
 
-	objectInfoList[ePart::BODY].translation = objectInfoList[ePart::BODY].translation + objectInfoList[ePart::BODY].targetDirection * (moveSpeed * std::abs(std::sin(Action::walkTheta)));
+	objectInfoList[ePart::BODY].velocity = (moveSpeed * std::abs(std::sin(walkTheta)));
+	objectInfoList[ePart::BODY].translation = objectInfoList[ePart::BODY].translation + objectInfoList[ePart::BODY].targetDirection * objectInfoList[ePart::BODY].velocity;
 
-	if (std::sin(Action::walkTheta) == 0 ) {
-		Action::stopTheta += breateSpeed;
-		if (Action::stopTheta >= glmath::pi * 2) {
-			Action::stopTheta = Action::stopTheta - glmath::pi * 2;
+	if (std::sin(walkTheta) == 0 ) {
+		Action::breathTheta += breateSpeed;
+		if (Action::breathTheta >= glmath::pi * 2) {
+			Action::breathTheta = Action::breathTheta - glmath::pi * 2;
 		}
-		objectInfoList[ePart::BODY].scale = 1.0f + breath * std::sin(Action::stopTheta);
-		objectInfoList[ePart::LEFT_SLEEVE].scale = 1.0f + breath * std::sin(Action::stopTheta);
-		objectInfoList[ePart::RIGHT_SLEEVE].scale = 1.0f + breath * std::sin(Action::stopTheta);
+		objectInfoList[ePart::BODY].scale = 1.0f + breath * std::sin(Action::breathTheta);
+		objectInfoList[ePart::LEFT_SLEEVE].scale = 1.0f + breath * std::sin(Action::breathTheta);
+		objectInfoList[ePart::RIGHT_SLEEVE].scale = 1.0f + breath * std::sin(Action::breathTheta);
 
 		transformList[ePart::BODY].scale = objectInfoList[ePart::BODY].scale;
 		transformList[ePart::LEFT_SLEEVE].scale = objectInfoList[ePart::BODY].scale;
 		transformList[ePart::RIGHT_SLEEVE].scale = objectInfoList[ePart::BODY].scale;
 		return ~static_cast<int>(eAct::STOP);
 	} else {
-		Action::stopTheta = 0.0f;
+		Action::breathTheta = 0.0f;
 		transformList[ePart::BODY].scale = 1.0f;
 		transformList[ePart::LEFT_SLEEVE].scale = 1.0f;
 		transformList[ePart::RIGHT_SLEEVE].scale = 1.0f;
 	}
 
-	float prevTheta = Action::walkTheta;
+	float prevTheta = walkTheta;
 
-	if (std::tan(Action::walkTheta) > 0) {
-		Action::walkTheta -= rotateSpeed;
+	if (std::tan(walkTheta) > 0) {
+		walkTheta -= rotateSpeed;
 	} else {
-		Action::walkTheta += rotateSpeed;
+		walkTheta += rotateSpeed;
 	}
 
-	if (std::sin(Action::walkTheta) * std::sin(prevTheta) < 0) {
-		Action::walkTheta = 0.0f;
+	if (std::sin(walkTheta) * std::sin(prevTheta) < 0) {
+		walkTheta = 0.0f;
 	}
 
-	objectInfoList[ePart::BODY].translation.y = yMin * std::abs(std::sin(Action::walkTheta));
+	objectInfoList[ePart::BODY].velocity = moveSpeed * std::abs(std::sin(walkTheta));
+	objectInfoList[ePart::BODY].translation.y = yMin * std::abs(std::sin(walkTheta));
 
-	if (Action::walkTheta < glmath::pi) {
-		objectInfoList[ePart::LEFT_UPPER_ARM].currentAngle.x = std::sin(Action::walkTheta + glmath::pi) * upperArmMin;
-		objectInfoList[ePart::RIGHT_UPPER_ARM].currentAngle.x = std::sin(Action::walkTheta) * upperArmMax;
-		objectInfoList[ePart::LEFT_LOWER_ARM].currentAngle.x = std::sin(Action::walkTheta + glmath::pi) * lowerArmMin;
-		objectInfoList[ePart::RIGHT_LOWER_ARM].currentAngle.x = std::sin(Action::walkTheta) * lowerArmMax;
-		objectInfoList[ePart::LEFT_UPPER_LEG].currentAngle.x = std::sin(Action::walkTheta) * upperLegMax;
-		objectInfoList[ePart::RIGHT_UPPER_LEG].currentAngle.x = std::sin(Action::walkTheta + glmath::pi) * upperLegMin;
-		objectInfoList[ePart::LEFT_LOWER_LEG].currentAngle.x = std::sin(Action::walkTheta) * lowerLegMax;
-		objectInfoList[ePart::RIGHT_LOWER_LEG].currentAngle.x = std::sin(Action::walkTheta + glmath::pi) * lowerLegMin;
+	if (walkTheta < glmath::pi) {
+		objectInfoList[ePart::LEFT_UPPER_ARM].currentAngle.x = std::sin(walkTheta + glmath::pi) * upperArmMin;
+		objectInfoList[ePart::RIGHT_UPPER_ARM].currentAngle.x = std::sin(walkTheta) * upperArmMax;
+		objectInfoList[ePart::LEFT_LOWER_ARM].currentAngle.x = std::sin(walkTheta + glmath::pi) * lowerArmMin;
+		objectInfoList[ePart::RIGHT_LOWER_ARM].currentAngle.x = std::sin(walkTheta) * lowerArmMax;
+		objectInfoList[ePart::LEFT_UPPER_LEG].currentAngle.x = std::sin(walkTheta) * upperLegMax;
+		objectInfoList[ePart::RIGHT_UPPER_LEG].currentAngle.x = std::sin(walkTheta + glmath::pi) * upperLegMin;
+		objectInfoList[ePart::LEFT_LOWER_LEG].currentAngle.x = std::sin(walkTheta) * lowerLegMax;
+		objectInfoList[ePart::RIGHT_LOWER_LEG].currentAngle.x = std::sin(walkTheta + glmath::pi) * lowerLegMin;
 	} else {
-		objectInfoList[ePart::LEFT_UPPER_ARM].currentAngle.x = std::sin(Action::walkTheta + glmath::pi) * upperArmMax;
-		objectInfoList[ePart::RIGHT_UPPER_ARM].currentAngle.x = std::sin(Action::walkTheta) * upperArmMin;
-		objectInfoList[ePart::LEFT_LOWER_ARM].currentAngle.x = std::sin(Action::walkTheta + glmath::pi) * lowerArmMax;
-		objectInfoList[ePart::RIGHT_LOWER_ARM].currentAngle.x = std::sin(Action::walkTheta) * lowerArmMin;
-		objectInfoList[ePart::LEFT_UPPER_LEG].currentAngle.x = std::sin(Action::walkTheta) * upperLegMin;
-		objectInfoList[ePart::RIGHT_UPPER_LEG].currentAngle.x = std::sin(Action::walkTheta + glmath::pi) * upperLegMax;
-		objectInfoList[ePart::LEFT_LOWER_LEG].currentAngle.x = std::sin(Action::walkTheta) * lowerLegMin;
-		objectInfoList[ePart::RIGHT_LOWER_LEG].currentAngle.x = std::sin(Action::walkTheta + glmath::pi) * lowerLegMax;
+		objectInfoList[ePart::LEFT_UPPER_ARM].currentAngle.x = std::sin(walkTheta + glmath::pi) * upperArmMax;
+		objectInfoList[ePart::RIGHT_UPPER_ARM].currentAngle.x = std::sin(walkTheta) * upperArmMin;
+		objectInfoList[ePart::LEFT_LOWER_ARM].currentAngle.x = std::sin(walkTheta + glmath::pi) * lowerArmMax;
+		objectInfoList[ePart::RIGHT_LOWER_ARM].currentAngle.x = std::sin(walkTheta) * lowerArmMin;
+		objectInfoList[ePart::LEFT_UPPER_LEG].currentAngle.x = std::sin(walkTheta) * upperLegMin;
+		objectInfoList[ePart::RIGHT_UPPER_LEG].currentAngle.x = std::sin(walkTheta + glmath::pi) * upperLegMax;
+		objectInfoList[ePart::LEFT_LOWER_LEG].currentAngle.x = std::sin(walkTheta) * lowerLegMin;
+		objectInfoList[ePart::RIGHT_LOWER_LEG].currentAngle.x = std::sin(walkTheta + glmath::pi) * lowerLegMax;
 	}
 
+	transformList[ePart::BODY].translation = objectInfoList[ePart::BODY].translation;
 	transformList[ePart::BODY].translation.y = objectInfoList[ePart::BODY].translation.y;
 
 	transformList[ePart::LEFT_UPPER_ARM].rotation = glmath::quat(glmath::vec3(objectInfoList[ePart::LEFT_UPPER_ARM].currentAngle.x, 0.0f, 0.0f));
@@ -155,33 +158,38 @@ int Walk::doAction(std::map<ePart, Transform>& transformList, std::map<ePart, Ob
 	static const float lowerLegMin = 10.0f;
 	static const float yMin = -0.3f;
 
-	Action::walkTheta += rotateSpeed;
+	walkTheta += rotateSpeed;
 
-	if (Action::walkTheta >= glmath::pi * 2.0f) {
-		Action::walkTheta -= glmath::pi * 2.0f;
+	if (walkTheta >= glmath::pi * 2.0f) {
+		walkTheta -= glmath::pi * 2.0f;
 	}
-
-	objectInfoList[ePart::BODY].translation = objectInfoList[ePart::BODY].translation + objectInfoList[ePart::BODY].targetDirection * (moveSpeed + amplitude * std::abs(std::sin(Action::walkTheta)));
-	objectInfoList[ePart::BODY].translation.y = yMin * std::abs(std::sin(Action::walkTheta));
-
-	if (Action::walkTheta < glmath::pi) {
-		objectInfoList[ePart::LEFT_UPPER_ARM].currentAngle.x = std::sin(Action::walkTheta + glmath::pi) * upperArmMin;
-		objectInfoList[ePart::RIGHT_UPPER_ARM].currentAngle.x = std::sin(Action::walkTheta) * upperArmMax;
-		objectInfoList[ePart::LEFT_LOWER_ARM].currentAngle.x = std::sin(Action::walkTheta + glmath::pi) * lowerArmMin;
-		objectInfoList[ePart::RIGHT_LOWER_ARM].currentAngle.x = std::sin(Action::walkTheta) * lowerArmMax;
-		objectInfoList[ePart::LEFT_UPPER_LEG].currentAngle.x = std::sin(Action::walkTheta) * upperLegMax;
-		objectInfoList[ePart::RIGHT_UPPER_LEG].currentAngle.x = std::sin(Action::walkTheta + glmath::pi) * upperLegMin;
-		objectInfoList[ePart::LEFT_LOWER_LEG].currentAngle.x = std::sin(Action::walkTheta) * lowerLegMax;
-		objectInfoList[ePart::RIGHT_LOWER_LEG].currentAngle.x = std::sin(Action::walkTheta + glmath::pi) * lowerLegMin;
+	
+	if (glmath::length(objectInfoList[ePart::BODY].velocity) < moveSpeed) {
+		objectInfoList[ePart::BODY].velocity = (moveSpeed * std::abs(std::sin(walkTheta)));
 	} else {
-		objectInfoList[ePart::LEFT_UPPER_ARM].currentAngle.x = std::sin(Action::walkTheta + glmath::pi) * upperArmMax;
-		objectInfoList[ePart::RIGHT_UPPER_ARM].currentAngle.x = std::sin(Action::walkTheta) * upperArmMin;
-		objectInfoList[ePart::LEFT_LOWER_ARM].currentAngle.x = std::sin(Action::walkTheta + glmath::pi) * lowerArmMax;
-		objectInfoList[ePart::RIGHT_LOWER_ARM].currentAngle.x = std::sin(Action::walkTheta) * lowerArmMin;
-		objectInfoList[ePart::LEFT_UPPER_LEG].currentAngle.x = std::sin(Action::walkTheta) * upperLegMin;
-		objectInfoList[ePart::RIGHT_UPPER_LEG].currentAngle.x = std::sin(Action::walkTheta + glmath::pi) * upperLegMax;
-		objectInfoList[ePart::LEFT_LOWER_LEG].currentAngle.x = std::sin(Action::walkTheta) * lowerLegMin;
-		objectInfoList[ePart::RIGHT_LOWER_LEG].currentAngle.x = std::sin(Action::walkTheta + glmath::pi) * lowerLegMax;
+		objectInfoList[ePart::BODY].velocity = (moveSpeed + amplitude * std::abs(std::sin(walkTheta)));
+	}
+	objectInfoList[ePart::BODY].translation = objectInfoList[ePart::BODY].translation + objectInfoList[ePart::BODY].targetDirection * objectInfoList[ePart::BODY].velocity;
+	objectInfoList[ePart::BODY].translation.y = yMin * std::abs(std::sin(walkTheta));
+
+	if (walkTheta < glmath::pi) {
+		objectInfoList[ePart::LEFT_UPPER_ARM].currentAngle.x = std::sin(walkTheta + glmath::pi) * upperArmMin;
+		objectInfoList[ePart::RIGHT_UPPER_ARM].currentAngle.x = std::sin(walkTheta) * upperArmMax;
+		objectInfoList[ePart::LEFT_LOWER_ARM].currentAngle.x = std::sin(walkTheta + glmath::pi) * lowerArmMin;
+		objectInfoList[ePart::RIGHT_LOWER_ARM].currentAngle.x = std::sin(walkTheta) * lowerArmMax;
+		objectInfoList[ePart::LEFT_UPPER_LEG].currentAngle.x = std::sin(walkTheta) * upperLegMax;
+		objectInfoList[ePart::RIGHT_UPPER_LEG].currentAngle.x = std::sin(walkTheta + glmath::pi) * upperLegMin;
+		objectInfoList[ePart::LEFT_LOWER_LEG].currentAngle.x = std::sin(walkTheta) * lowerLegMax;
+		objectInfoList[ePart::RIGHT_LOWER_LEG].currentAngle.x = std::sin(walkTheta + glmath::pi) * lowerLegMin;
+	} else {
+		objectInfoList[ePart::LEFT_UPPER_ARM].currentAngle.x = std::sin(walkTheta + glmath::pi) * upperArmMax;
+		objectInfoList[ePart::RIGHT_UPPER_ARM].currentAngle.x = std::sin(walkTheta) * upperArmMin;
+		objectInfoList[ePart::LEFT_LOWER_ARM].currentAngle.x = std::sin(walkTheta + glmath::pi) * lowerArmMax;
+		objectInfoList[ePart::RIGHT_LOWER_ARM].currentAngle.x = std::sin(walkTheta) * lowerArmMin;
+		objectInfoList[ePart::LEFT_UPPER_LEG].currentAngle.x = std::sin(walkTheta) * upperLegMin;
+		objectInfoList[ePart::RIGHT_UPPER_LEG].currentAngle.x = std::sin(walkTheta + glmath::pi) * upperLegMax;
+		objectInfoList[ePart::LEFT_LOWER_LEG].currentAngle.x = std::sin(walkTheta) * lowerLegMin;
+		objectInfoList[ePart::RIGHT_LOWER_LEG].currentAngle.x = std::sin(walkTheta + glmath::pi) * lowerLegMax;
 	}
 
 
