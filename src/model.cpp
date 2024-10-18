@@ -38,8 +38,10 @@ std::vector<ePart> Model::getPartChildrenInfo(ePart part) {
 		{ ePart::BODY, { ePart::HEAD, ePart::LEFT_UPPER_ARM, ePart::LEFT_UPPER_LEG, ePart::RIGHT_UPPER_ARM, ePart::RIGHT_UPPER_LEG } },
 		{ ePart::HEAD, { ePart::HAIR, ePart::LEFT_EYE, ePart::RIGHT_EYE, ePart::NOSE, ePart::MOUSE } },
 		{ ePart::HAIR, { ePart::NONE } },
-		{ ePart::LEFT_EYE, { ePart::NONE } },
-		{ ePart::RIGHT_EYE, { ePart::NONE } },
+		{ ePart::LEFT_EYE, { ePart::LEFT_PUPIL } },
+		{ ePart::LEFT_PUPIL, { ePart::NONE } },
+		{ ePart::RIGHT_EYE, { ePart::RIGHT_PUPIL } },
+		{ ePart::RIGHT_PUPIL, { ePart::NONE } },
 		{ ePart::NOSE, { ePart::NONE } },
 		{ ePart::MOUSE, { ePart::NONE } },
 		{ ePart::LEFT_UPPER_ARM, { ePart::LEFT_LOWER_ARM, ePart::LEFT_SLEEVE } },
@@ -64,8 +66,10 @@ PartInfo Model::getPartInfo(ePart part) {
 		{ ePart::BODY, { ePart::BODY, glmath::vec3(0.0f, 6.0f, 0.0f), glmath::vec3(0.0f), glmath::quat(), glmath::vec3(2.0f, 3.0f, 0.8f), glmath::vec3(0.184f, 0.184f, 0.184f) } },  // 몸통
 		{ ePart::HEAD, { ePart::HEAD, glmath::vec3(0.0f, 2.0f, 0.0f), glmath::vec3(0.0f), glmath::quat(), glmath::vec3(1.0f), glmath::vec3(0.95f, 0.80f, 0.72f) } },  // 머리
 		{ ePart::HAIR, { ePart::HAIR, glmath::vec3(0.0f, 0.3f, 0.0f), glmath::vec3(0.0f), glmath::quat(), glmath::vec3(1.05f, 0.5f, 1.05f), glmath::vec3(0.11f, 0.11f, 0.11f) } },
-		{ ePart::LEFT_EYE, { ePart::LEFT_EYE, glmath::vec3(-0.17f, -0.1f, -0.5f), glmath::vec3(0.0f), glmath::quat(), glmath::vec3(0.2f, 0.2f, 0.05f), glmath::vec3(0.0f, 0.0f, 0.0f) } },
-		{ ePart::RIGHT_EYE, { ePart::RIGHT_EYE, glmath::vec3(0.17f, -0.1f, -0.5f), glmath::vec3(0.0f), glmath::quat(), glmath::vec3(0.2f, 0.2f, 0.05f), glmath::vec3(0.0f, 0.0f, 0.0f) } },
+		{ ePart::LEFT_EYE, { ePart::LEFT_EYE, glmath::vec3(-0.17f, -0.1f, -0.5f), glmath::vec3(0.0f), glmath::quat(), glmath::vec3(0.2f, 0.2f, 0.05f), glmath::vec3(1.0f, 1.0f, 1.0f) } },
+		{ ePart::LEFT_PUPIL, { ePart::LEFT_PUPIL, glmath::vec3(0.0f), glmath::vec3(0.0f), glmath::quat(), glmath::vec3(0.1f, 0.1f, 0.06f), glmath::vec3(0.0f, 0.0f, 0.0f) } },
+		{ ePart::RIGHT_EYE, { ePart::RIGHT_EYE, glmath::vec3(0.17f, -0.1f, -0.5f), glmath::vec3(0.0f), glmath::quat(), glmath::vec3(0.2f, 0.2f, 0.05f), glmath::vec3(1.0f, 1.0f, 1.0f) } },
+		{ ePart::RIGHT_PUPIL, { ePart::RIGHT_PUPIL, glmath::vec3(0.0f), glmath::vec3(0.0f), glmath::quat(), glmath::vec3(0.1f, 0.1f, 0.06f), glmath::vec3(0.0f, 0.0f, 0.0f) } },
 		{ ePart::NOSE, { ePart::NOSE, glmath::vec3(0.0f, -0.25f, -0.5f), glmath::vec3(0.0f), glmath::quat(), glmath::vec3(0.05f, 0.1f, 0.05f), glmath::vec3(0.0f, 0.0f, 0.0f) } },
 		{ ePart::MOUSE, { ePart::MOUSE, glmath::vec3(0.0f, -0.4f, -0.5f), glmath::vec3(0.0f), glmath::quat(), glmath::vec3(0.5f, 0.1f, 0.05f), glmath::vec3(0.7f, 0.0f, 0.0f) } },
 		{ ePart::LEFT_UPPER_ARM, { ePart::LEFT_UPPER_ARM, glmath::vec3(-1.25f, 0.75f, 0.0f), glmath::vec3(0.0f, 0.75f, 0.0f), glmath::quat(), glmath::vec3(0.5f, 1.5f, 0.5f), glmath::vec3(0.95f, 0.80f, 0.72f) } }, // 왼쪽 상박
