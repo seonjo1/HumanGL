@@ -78,6 +78,13 @@ glmath::vec3& glmath::vec3::operator=(const glmath::vec3& copy) {
 	return *this;
 }
 
+glmath::vec3& glmath::vec3::operator=(float copy) {
+	this->x = copy;
+	this->y = copy;
+	this->z = copy;
+	return *this;
+}
+
 glmath::vec3 glmath::vec3::operator+(const vec3& rhs) const {
 	return glmath::vec3(this->x + rhs.x, this->y + rhs.y, this->z + rhs.z);
 }

@@ -39,6 +39,7 @@ public:
 	vec3(const vec3& copy);
 	vec3(const vec4& copy);
 	vec3& operator=(const vec3& copy);
+	vec3& operator=(float copy);
 	vec3 operator+(const vec3& rhs) const;
 	vec3 operator-(const vec3& rhs) const;
 	vec3 operator*(const vec3& rhs) const;
