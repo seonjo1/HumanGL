@@ -20,7 +20,7 @@ struct PartInfo {
 
 class Model {
 public:
-	static std::unique_ptr<Model> createHuman(ePart part = ePart::BODY);
+	static std::unique_ptr<Model> createHuman(ePart part = ePart::PELVIS);
 	static std::unique_ptr<Model> createGround();
 	static std::stack<glmath::mat4> s_stack;
 	void draw(Program* program, std::map<ePart, Transform>& transformList);
