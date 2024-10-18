@@ -1,5 +1,7 @@
 #include "../include/action.h"
 
+float Action::walkTheta = 0.0f;
+
 int operator&(int bit, eAct act) {
 	return bit & static_cast<int>(act);
 }
@@ -23,67 +25,67 @@ Transform operator*(const Transform& t1, const Transform& t2) {
 }
 
 int Stop::doAction(std::map<ePart, Transform>& transformList, std::map<ePart, ObjectInfo>& objectInfoList) {
-	static const float rotateSpeed = 0.7f;
-	static const float upperAngleMax = 0.0f;
-	static const float upperAngleMin = 0.0f;
-	static const float lowerAngleMax = 0.0f;
-	static const float lowerAngleMin = 0.0f;
+	static const float rotateSpeed = 0.05f;
+	static const float upperArmMax = 10.0f;
+	static const float upperArmMin = 10.0f;
+	static const float lowerArmMax = 5.0f;
+	static const float lowerArmMin = 0.0f;
+	static const float upperLegMax = 25.0f;
+	static const float upperLegMin = 20.0f;
+	static const float lowerLegMax = -10.0f;
+	static const float lowerLegMin = 10.0f;
+	static const float yMin = -0.2f;
 
-	if (objectInfoList[ePart::LEFT_UPPER_LEG].currentAngle.x < objectInfoList[ePart::RIGHT_UPPER_LEG].currentAngle.x) {
-		float ratio = rotateSpeed / (upperAngleMax - objectInfoList[ePart::LEFT_UPPER_LEG].currentAngle.x);
-		objectInfoList[ePart::LEFT_UPPER_LEG].currentAngle.x += rotateSpeed;
-		if (objectInfoList[ePart::LEFT_UPPER_LEG].currentAngle.x >= upperAngleMax) {
-			objectInfoList[ePart::LEFT_UPPER_LEG].currentAngle.x = upperAngleMax;
-			objectInfoList[ePart::RIGHT_UPPER_LEG].currentAngle.x = upperAngleMin;
-			objectInfoList[ePart::LEFT_LOWER_LEG].currentAngle.x = lowerAngleMax;
-			objectInfoList[ePart::RIGHT_LOWER_LEG].currentAngle.x = lowerAngleMin;
-		} else {
-			float rightUpperSpeed = ratio * (upperAngleMin - objectInfoList[ePart::RIGHT_UPPER_LEG].currentAngle.x);
-			objectInfoList[ePart::RIGHT_UPPER_LEG].currentAngle.x += rightUpperSpeed;
 
-			float leftLowerSpeed = ratio * (lowerAngleMax - objectInfoList[ePart::LEFT_LOWER_LEG].currentAngle.x);
-			objectInfoList[ePart::LEFT_LOWER_LEG].currentAngle.x += leftLowerSpeed;
-
-			float rightLowerSpeed = ratio * (lowerAngleMin - objectInfoList[ePart::RIGHT_LOWER_LEG].currentAngle.x);
-			objectInfoList[ePart::RIGHT_LOWER_LEG].currentAngle.x += rightLowerSpeed;
-
-			float downSpeed = ratio * (0.0f - objectInfoList[ePart::BODY].translation.y);
-			objectInfoList[ePart::BODY].translation.y += downSpeed;
-		}
-
-		transformList[ePart::LEFT_UPPER_LEG].rotation = glmath::quat(glmath::vec3(objectInfoList[ePart::LEFT_UPPER_LEG].currentAngle.x, 0.0f, 0.0f));
-		transformList[ePart::RIGHT_UPPER_LEG].rotation = glmath::quat(glmath::vec3(objectInfoList[ePart::RIGHT_UPPER_LEG].currentAngle.x, 0.0f, 0.0f));
-		transformList[ePart::LEFT_LOWER_LEG].rotation = glmath::quat(glmath::vec3(objectInfoList[ePart::LEFT_LOWER_LEG].currentAngle.x, 0.0f, 0.0f));
-		transformList[ePart::RIGHT_LOWER_LEG].rotation = glmath::quat(glmath::vec3(objectInfoList[ePart::RIGHT_LOWER_LEG].currentAngle.x, 0.0f, 0.0f));
-		transformList[ePart::BODY].translation.y = objectInfoList[ePart::BODY].translation.y;
-	} else {
-		float ratio = rotateSpeed / (upperAngleMax - objectInfoList[ePart::RIGHT_UPPER_LEG].currentAngle.x);
-		objectInfoList[ePart::RIGHT_UPPER_LEG].currentAngle.x += rotateSpeed;
-		if (objectInfoList[ePart::RIGHT_UPPER_LEG].currentAngle.x >= upperAngleMax) {
-			objectInfoList[ePart::RIGHT_UPPER_LEG].currentAngle.x = upperAngleMax;
-			objectInfoList[ePart::LEFT_UPPER_LEG].currentAngle.x = upperAngleMin;
-			objectInfoList[ePart::LEFT_LOWER_LEG].currentAngle.x = lowerAngleMax;
-			objectInfoList[ePart::RIGHT_LOWER_LEG].currentAngle.x = lowerAngleMin;
-		} else {
-			float rightUpperSpeed = ratio * (upperAngleMin - objectInfoList[ePart::LEFT_UPPER_LEG].currentAngle.x);
-			objectInfoList[ePart::LEFT_UPPER_LEG].currentAngle.x += rightUpperSpeed;
-
-			float leftLowerSpeed = ratio * (lowerAngleMax - objectInfoList[ePart::LEFT_LOWER_LEG].currentAngle.x);
-			objectInfoList[ePart::LEFT_LOWER_LEG].currentAngle.x += leftLowerSpeed;
-
-			float rightLowerSpeed = ratio * (lowerAngleMin - objectInfoList[ePart::RIGHT_LOWER_LEG].currentAngle.x);
-			objectInfoList[ePart::RIGHT_LOWER_LEG].currentAngle.x += rightLowerSpeed;
-
-			float downSpeed = ratio * (0.0f - objectInfoList[ePart::BODY].translation.y);
-			objectInfoList[ePart::BODY].translation.y += downSpeed;
-		}
-
-		transformList[ePart::LEFT_UPPER_LEG].rotation = glmath::quat(glmath::vec3(objectInfoList[ePart::LEFT_UPPER_LEG].currentAngle.x, 0.0f, 0.0f));
-		transformList[ePart::RIGHT_UPPER_LEG].rotation = glmath::quat(glmath::vec3(objectInfoList[ePart::RIGHT_UPPER_LEG].currentAngle.x, 0.0f, 0.0f));
-		transformList[ePart::LEFT_LOWER_LEG].rotation = glmath::quat(glmath::vec3(objectInfoList[ePart::LEFT_LOWER_LEG].currentAngle.x, 0.0f, 0.0f));
-		transformList[ePart::RIGHT_LOWER_LEG].rotation = glmath::quat(glmath::vec3(objectInfoList[ePart::RIGHT_LOWER_LEG].currentAngle.x, 0.0f, 0.0f));
-		transformList[ePart::BODY].translation.y = objectInfoList[ePart::BODY].translation.y;
+	if (std::sin(Action::walkTheta) == 0 ) {
+		return ~static_cast<int>(eAct::STOP);
 	}
+
+	float prevTheta = Action::walkTheta;
+
+	if (std::tan(Action::walkTheta) > 0) {
+		Action::walkTheta -= rotateSpeed;
+	} else {
+		Action::walkTheta += rotateSpeed;
+	}
+
+	if (std::sin(Action::walkTheta) * std::sin(prevTheta) < 0) {
+		Action::walkTheta = 0.0f;
+	}
+
+	objectInfoList[ePart::BODY].translation.y = yMin * std::abs(std::sin(Action::walkTheta));
+
+	if (Action::walkTheta < glmath::pi) {
+		objectInfoList[ePart::LEFT_UPPER_ARM].currentAngle.x = std::sin(Action::walkTheta + glmath::pi) * upperArmMin;
+		objectInfoList[ePart::RIGHT_UPPER_ARM].currentAngle.x = std::sin(Action::walkTheta) * upperArmMax;
+		objectInfoList[ePart::LEFT_LOWER_ARM].currentAngle.x = std::sin(Action::walkTheta + glmath::pi) * lowerArmMin;
+		objectInfoList[ePart::RIGHT_LOWER_ARM].currentAngle.x = std::sin(Action::walkTheta) * lowerArmMax;
+		objectInfoList[ePart::LEFT_UPPER_LEG].currentAngle.x = std::sin(Action::walkTheta) * upperLegMax;
+		objectInfoList[ePart::RIGHT_UPPER_LEG].currentAngle.x = std::sin(Action::walkTheta + glmath::pi) * upperLegMin;
+		objectInfoList[ePart::LEFT_LOWER_LEG].currentAngle.x = std::sin(Action::walkTheta) * lowerLegMax;
+		objectInfoList[ePart::RIGHT_LOWER_LEG].currentAngle.x = std::sin(Action::walkTheta + glmath::pi) * lowerLegMin;
+	} else {
+		objectInfoList[ePart::LEFT_UPPER_ARM].currentAngle.x = std::sin(Action::walkTheta + glmath::pi) * upperArmMax;
+		objectInfoList[ePart::RIGHT_UPPER_ARM].currentAngle.x = std::sin(Action::walkTheta) * upperArmMin;
+		objectInfoList[ePart::LEFT_LOWER_ARM].currentAngle.x = std::sin(Action::walkTheta + glmath::pi) * lowerArmMax;
+		objectInfoList[ePart::RIGHT_LOWER_ARM].currentAngle.x = std::sin(Action::walkTheta) * lowerArmMin;
+		objectInfoList[ePart::LEFT_UPPER_LEG].currentAngle.x = std::sin(Action::walkTheta) * upperLegMin;
+		objectInfoList[ePart::RIGHT_UPPER_LEG].currentAngle.x = std::sin(Action::walkTheta + glmath::pi) * upperLegMax;
+		objectInfoList[ePart::LEFT_LOWER_LEG].currentAngle.x = std::sin(Action::walkTheta) * lowerLegMin;
+		objectInfoList[ePart::RIGHT_LOWER_LEG].currentAngle.x = std::sin(Action::walkTheta + glmath::pi) * lowerLegMax;
+	}
+
+	transformList[ePart::BODY].translation.y = objectInfoList[ePart::BODY].translation.y;
+
+	transformList[ePart::LEFT_UPPER_ARM].rotation = glmath::quat(glmath::vec3(objectInfoList[ePart::LEFT_UPPER_ARM].currentAngle.x, 0.0f, 0.0f));
+	transformList[ePart::RIGHT_UPPER_ARM].rotation = glmath::quat(glmath::vec3(objectInfoList[ePart::RIGHT_UPPER_ARM].currentAngle.x, 0.0f, 0.0f));
+	transformList[ePart::LEFT_LOWER_ARM].rotation = glmath::quat(glmath::vec3(objectInfoList[ePart::LEFT_LOWER_ARM].currentAngle.x, 0.0f, 0.0f));
+	transformList[ePart::RIGHT_LOWER_ARM].rotation = glmath::quat(glmath::vec3(objectInfoList[ePart::RIGHT_LOWER_ARM].currentAngle.x, 0.0f, 0.0f));
+
+	transformList[ePart::LEFT_UPPER_LEG].rotation = glmath::quat(glmath::vec3(objectInfoList[ePart::LEFT_UPPER_LEG].currentAngle.x, 0.0f, 0.0f));
+	transformList[ePart::RIGHT_UPPER_LEG].rotation = glmath::quat(glmath::vec3(objectInfoList[ePart::RIGHT_UPPER_LEG].currentAngle.x, 0.0f, 0.0f));
+	transformList[ePart::LEFT_LOWER_LEG].rotation = glmath::quat(glmath::vec3(objectInfoList[ePart::LEFT_LOWER_LEG].currentAngle.x, 0.0f, 0.0f));
+	transformList[ePart::RIGHT_LOWER_LEG].rotation = glmath::quat(glmath::vec3(objectInfoList[ePart::RIGHT_LOWER_LEG].currentAngle.x, 0.0f, 0.0f));
 
 	return ~static_cast<int>(eAct::STOP);
 }
@@ -119,94 +121,58 @@ int Jump::doAction(std::map<ePart, Transform>& transformList, std::map<ePart, Ob
 
 int Walk::doAction(std::map<ePart, Transform>& transformList, std::map<ePart, ObjectInfo>& objectInfoList) {
 	static const float moveSpeed = 0.05f;
-	static const float rotateSpeed = 0.5f;
-	static const  float upperAngleMax = 40.0f;
-	static const float upperAngleMin = -30.0f;
-	static const float lowerAngleMax = -25.0f;
-	static const float lowerAngleMin = -5.0f;
+	static const float rotateSpeed = 0.05f;
+	static const float upperArmMax = 10.0f;
+	static const float upperArmMin = 10.0f;
+	static const float lowerArmMax = 5.0f;
+	static const float lowerArmMin = 0.0f;
+	static const float upperLegMax = 25.0f;
+	static const float upperLegMin = 20.0f;
+	static const float lowerLegMax = -10.0f;
+	static const float lowerLegMin = 10.0f;
 	static const float yMin = -0.2f;
-	static float isLeft = true;
-	static float isDown = true;
+
+	Action::walkTheta += rotateSpeed;
+
+	if (Action::walkTheta >= glmath::pi * 2.0f) {
+		Action::walkTheta -= glmath::pi * 2.0f;
+	}
 
 	objectInfoList[ePart::BODY].translation = objectInfoList[ePart::BODY].translation + moveSpeed * objectInfoList[ePart::BODY].targetDirection;
-	transformList[ePart::BODY].translation = objectInfoList[ePart::BODY].translation;
+	objectInfoList[ePart::BODY].translation.y = yMin * std::abs(std::sin(Action::walkTheta));
 
-	if (isLeft) {
-		float ratio = rotateSpeed / (upperAngleMax - objectInfoList[ePart::LEFT_UPPER_LEG].currentAngle.x);
-		objectInfoList[ePart::LEFT_UPPER_LEG].currentAngle.x += rotateSpeed;
-		if (objectInfoList[ePart::LEFT_UPPER_LEG].currentAngle.x >= upperAngleMax) {
-			objectInfoList[ePart::LEFT_UPPER_LEG].currentAngle.x = upperAngleMax;
-			objectInfoList[ePart::RIGHT_UPPER_LEG].currentAngle.x = upperAngleMin;
-			objectInfoList[ePart::LEFT_LOWER_LEG].currentAngle.x = lowerAngleMax;
-			objectInfoList[ePart::RIGHT_LOWER_LEG].currentAngle.x = lowerAngleMin;
-			objectInfoList[ePart::BODY].translation.y = yMin;
-			isLeft = !isLeft;
-			isDown = !isDown;
-		} else {
-			float rightUpperSpeed = ratio * (upperAngleMin - objectInfoList[ePart::RIGHT_UPPER_LEG].currentAngle.x);
-			objectInfoList[ePart::RIGHT_UPPER_LEG].currentAngle.x += rightUpperSpeed;
-
-			float leftLowerSpeed = ratio * (lowerAngleMax - objectInfoList[ePart::LEFT_LOWER_LEG].currentAngle.x);
-			objectInfoList[ePart::LEFT_LOWER_LEG].currentAngle.x += leftLowerSpeed;
-
-			float rightLowerSpeed = ratio * (lowerAngleMin - objectInfoList[ePart::RIGHT_LOWER_LEG].currentAngle.x);
-			objectInfoList[ePart::RIGHT_LOWER_LEG].currentAngle.x += rightLowerSpeed;
-
-			if (isDown) {
-				float downSpeed = ratio * (yMin - objectInfoList[ePart::BODY].translation.y);
-				objectInfoList[ePart::BODY].translation.y += downSpeed;
-			} else {
-				if (objectInfoList[ePart::LEFT_UPPER_LEG].currentAngle.x >= 0) {
-					objectInfoList[ePart::BODY].translation.y = 0.0f;
-					isDown = !isDown;
-				} else {
-					float yRatio = rotateSpeed / (0.0f - objectInfoList[ePart::LEFT_UPPER_LEG].currentAngle.x);
-					float upSpeed = yRatio * (0.0f - objectInfoList[ePart::BODY].translation.y);
-					objectInfoList[ePart::BODY].translation.y += upSpeed;
-				}
-			}
-		}
+	if (Action::walkTheta < glmath::pi) {
+		objectInfoList[ePart::LEFT_UPPER_ARM].currentAngle.x = std::sin(Action::walkTheta + glmath::pi) * upperArmMin;
+		objectInfoList[ePart::RIGHT_UPPER_ARM].currentAngle.x = std::sin(Action::walkTheta) * upperArmMax;
+		objectInfoList[ePart::LEFT_LOWER_ARM].currentAngle.x = std::sin(Action::walkTheta + glmath::pi) * lowerArmMin;
+		objectInfoList[ePart::RIGHT_LOWER_ARM].currentAngle.x = std::sin(Action::walkTheta) * lowerArmMax;
+		objectInfoList[ePart::LEFT_UPPER_LEG].currentAngle.x = std::sin(Action::walkTheta) * upperLegMax;
+		objectInfoList[ePart::RIGHT_UPPER_LEG].currentAngle.x = std::sin(Action::walkTheta + glmath::pi) * upperLegMin;
+		objectInfoList[ePart::LEFT_LOWER_LEG].currentAngle.x = std::sin(Action::walkTheta) * lowerLegMax;
+		objectInfoList[ePart::RIGHT_LOWER_LEG].currentAngle.x = std::sin(Action::walkTheta + glmath::pi) * lowerLegMin;
 	} else {
-		float ratio = rotateSpeed / (upperAngleMax - objectInfoList[ePart::RIGHT_UPPER_LEG].currentAngle.x);
-		objectInfoList[ePart::RIGHT_UPPER_LEG].currentAngle.x += rotateSpeed;
-		if (objectInfoList[ePart::RIGHT_UPPER_LEG].currentAngle.x >= upperAngleMax) {
-			objectInfoList[ePart::RIGHT_UPPER_LEG].currentAngle.x = upperAngleMax;
-			objectInfoList[ePart::LEFT_UPPER_LEG].currentAngle.x = upperAngleMin;
-			objectInfoList[ePart::RIGHT_LOWER_LEG].currentAngle.x = lowerAngleMax;
-			objectInfoList[ePart::LEFT_LOWER_LEG].currentAngle.x = lowerAngleMin;
-			objectInfoList[ePart::BODY].translation.y = yMin;
-			isLeft = !isLeft;
-			isDown = !isDown;
-		} else {
-			float leftUpperSpeed = ratio * (upperAngleMin - objectInfoList[ePart::LEFT_UPPER_LEG].currentAngle.x);
-			objectInfoList[ePart::LEFT_UPPER_LEG].currentAngle.x += leftUpperSpeed;
-
-			float rightLowerSpeed = ratio * (lowerAngleMax - objectInfoList[ePart::RIGHT_LOWER_LEG].currentAngle.x);
-			objectInfoList[ePart::RIGHT_LOWER_LEG].currentAngle.x += rightLowerSpeed;
-
-			float leftLowerSpeed = ratio * (lowerAngleMin - objectInfoList[ePart::LEFT_LOWER_LEG].currentAngle.x);
-			objectInfoList[ePart::LEFT_LOWER_LEG].currentAngle.x += leftLowerSpeed;
-			
-			if (isDown) {
-				float downSpeed = ratio * (yMin - objectInfoList[ePart::BODY].translation.y);
-				objectInfoList[ePart::BODY].translation.y += downSpeed;
-			} else {
-				if (objectInfoList[ePart::RIGHT_UPPER_LEG].currentAngle.x >= 0) {
-					objectInfoList[ePart::BODY].translation.y = 0.0f;
-					isDown = !isDown;
-				} else {
-					float zRatio = rotateSpeed / (0.0f - objectInfoList[ePart::RIGHT_UPPER_LEG].currentAngle.x);
-					float upSpeed = zRatio * (0.0f - objectInfoList[ePart::BODY].translation.y);
-					objectInfoList[ePart::BODY].translation.y += upSpeed;
-				}
-			}
-		}
+		objectInfoList[ePart::LEFT_UPPER_ARM].currentAngle.x = std::sin(Action::walkTheta + glmath::pi) * upperArmMax;
+		objectInfoList[ePart::RIGHT_UPPER_ARM].currentAngle.x = std::sin(Action::walkTheta) * upperArmMin;
+		objectInfoList[ePart::LEFT_LOWER_ARM].currentAngle.x = std::sin(Action::walkTheta + glmath::pi) * lowerArmMax;
+		objectInfoList[ePart::RIGHT_LOWER_ARM].currentAngle.x = std::sin(Action::walkTheta) * lowerArmMin;
+		objectInfoList[ePart::LEFT_UPPER_LEG].currentAngle.x = std::sin(Action::walkTheta) * upperLegMin;
+		objectInfoList[ePart::RIGHT_UPPER_LEG].currentAngle.x = std::sin(Action::walkTheta + glmath::pi) * upperLegMax;
+		objectInfoList[ePart::LEFT_LOWER_LEG].currentAngle.x = std::sin(Action::walkTheta) * lowerLegMin;
+		objectInfoList[ePart::RIGHT_LOWER_LEG].currentAngle.x = std::sin(Action::walkTheta + glmath::pi) * lowerLegMax;
 	}
+
+
+	transformList[ePart::BODY].translation = objectInfoList[ePart::BODY].translation;
+	transformList[ePart::BODY].translation.y = objectInfoList[ePart::BODY].translation.y;
+
+	transformList[ePart::LEFT_UPPER_ARM].rotation = glmath::quat(glmath::vec3(objectInfoList[ePart::LEFT_UPPER_ARM].currentAngle.x, 0.0f, 0.0f));
+	transformList[ePart::RIGHT_UPPER_ARM].rotation = glmath::quat(glmath::vec3(objectInfoList[ePart::RIGHT_UPPER_ARM].currentAngle.x, 0.0f, 0.0f));
+	transformList[ePart::LEFT_LOWER_ARM].rotation = glmath::quat(glmath::vec3(objectInfoList[ePart::LEFT_LOWER_ARM].currentAngle.x, 0.0f, 0.0f));
+	transformList[ePart::RIGHT_LOWER_ARM].rotation = glmath::quat(glmath::vec3(objectInfoList[ePart::RIGHT_LOWER_ARM].currentAngle.x, 0.0f, 0.0f));
+
 	transformList[ePart::LEFT_UPPER_LEG].rotation = glmath::quat(glmath::vec3(objectInfoList[ePart::LEFT_UPPER_LEG].currentAngle.x, 0.0f, 0.0f));
 	transformList[ePart::RIGHT_UPPER_LEG].rotation = glmath::quat(glmath::vec3(objectInfoList[ePart::RIGHT_UPPER_LEG].currentAngle.x, 0.0f, 0.0f));
 	transformList[ePart::LEFT_LOWER_LEG].rotation = glmath::quat(glmath::vec3(objectInfoList[ePart::LEFT_LOWER_LEG].currentAngle.x, 0.0f, 0.0f));
 	transformList[ePart::RIGHT_LOWER_LEG].rotation = glmath::quat(glmath::vec3(objectInfoList[ePart::RIGHT_LOWER_LEG].currentAngle.x, 0.0f, 0.0f));
-	transformList[ePart::BODY].translation.y = objectInfoList[ePart::BODY].translation.y;
 	return ~static_cast<int>(eAct::WALK);
 }
-

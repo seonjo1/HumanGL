@@ -68,6 +68,8 @@ class Action {
 public:
 	virtual int doAction(std::map<ePart, Transform>& transformList, std::map<ePart, ObjectInfo>& objectInfoList) = 0;
 	virtual ~Action() = default;
+protected:
+	static float walkTheta;
 };
 
 class Stop : public Action {
