@@ -29,9 +29,9 @@ int Stop::doAction(std::map<ePart, Transform>& transformList, std::map<ePart, Ob
 	static const float moveSpeed = 0.05f;
 	static const float breateSpeed = 0.025f;
 	static const float rotateSpeed = 0.05f;
-	static const float upperArmMax = 10.0f;
-	static const float upperArmMin = 10.0f;
-	static const float lowerArmMax = 5.0f;
+	static const float upperArmMax = 15.0f;
+	static const float upperArmMin = 15.0f;
+	static const float lowerArmMax = 10.0f;
 	static const float lowerArmMin = 0.0f;
 	static const float upperLegMax = 25.0f;
 	static const float upperLegMin = 20.0f;
