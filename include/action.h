@@ -21,6 +21,7 @@ bool operator==(int bit, eAct act);
 
 enum class ePart
 {
+	PELVIS,
 	BODY,
 	HAIR,
 	LEFT_EYE,
