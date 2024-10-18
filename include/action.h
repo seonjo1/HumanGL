@@ -29,13 +29,17 @@ enum class ePart
 	MOUSE,
 	HEAD,
 	LEFT_UPPER_ARM,
+	LEFT_SLEEVE,
 	LEFT_LOWER_ARM,
 	RIGHT_UPPER_ARM,
+	RIGHT_SLEEVE,
 	RIGHT_LOWER_ARM,
 	LEFT_UPPER_LEG,
 	LEFT_LOWER_LEG,
 	RIGHT_UPPER_LEG,
 	RIGHT_LOWER_LEG,
+	LEFT_FOOT,
+	RIGHT_FOOT,
 	GROUND,
 	NONE,
 };
@@ -50,6 +54,7 @@ struct Transform {
 
 struct ObjectInfo {
 	glmath::vec3 velocity;
+	glmath::vec3 scale;
 	glmath::vec3 translation;
 	glmath::vec3 currentAngle;
 	glmath::vec3 targetAngle;
@@ -57,7 +62,7 @@ struct ObjectInfo {
 	glmath::vec3 targetDirection;
 
 	ObjectInfo()
-		: velocity(glmath::vec3(0.0f)), translation(glmath::vec3(0.0f)),
+		: velocity(glmath::vec3(0.0f)), scale(glmath::vec3(1.0f)), translation(glmath::vec3(0.0f)),
 		  currentAngle(glmath::vec3(0.0f)), targetAngle(glmath::vec3(0.0f)),
 		  currentDirection(glmath::vec3(0.0f, 0.0f, -1.0f)), targetDirection(glmath::vec3(0.0f, 0.0f, -1.0f)) {};
 };
@@ -70,6 +75,7 @@ public:
 	virtual ~Action() = default;
 protected:
 	static float walkTheta;
+	static float stopTheta;
 };
 
 class Stop : public Action {

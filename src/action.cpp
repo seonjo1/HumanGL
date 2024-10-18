@@ -1,6 +1,7 @@
 #include "../include/action.h"
 
 float Action::walkTheta = 0.0f;
+float Action::stopTheta = 0.0f;
 
 int operator&(int bit, eAct act) {
 	return bit & static_cast<int>(act);
@@ -25,6 +26,9 @@ Transform operator*(const Transform& t1, const Transform& t2) {
 }
 
 int Stop::doAction(std::map<ePart, Transform>& transformList, std::map<ePart, ObjectInfo>& objectInfoList) {
+	static const float moveSpeed = 0.05f;
+	static const float breateSpeed = 0.025f;
+	static const float amplitude = 0.005f;
 	static const float rotateSpeed = 0.05f;
 	static const float upperArmMax = 10.0f;
 	static const float upperArmMin = 10.0f;
@@ -34,11 +38,29 @@ int Stop::doAction(std::map<ePart, Transform>& transformList, std::map<ePart, Ob
 	static const float upperLegMin = 20.0f;
 	static const float lowerLegMax = -10.0f;
 	static const float lowerLegMin = 10.0f;
-	static const float yMin = -0.2f;
+	static const float yMin = -0.3f;
+	static const float breath = 0.005f;
 
+	objectInfoList[ePart::BODY].translation = objectInfoList[ePart::BODY].translation + objectInfoList[ePart::BODY].targetDirection * (moveSpeed * std::abs(std::sin(Action::walkTheta)));
 
 	if (std::sin(Action::walkTheta) == 0 ) {
+		Action::stopTheta += breateSpeed;
+		if (Action::stopTheta >= glmath::pi * 2) {
+			Action::stopTheta = Action::stopTheta - glmath::pi * 2;
+		}
+		objectInfoList[ePart::BODY].scale = 1.0f + breath * std::sin(Action::stopTheta);
+		objectInfoList[ePart::LEFT_SLEEVE].scale = 1.0f + breath * std::sin(Action::stopTheta);
+		objectInfoList[ePart::RIGHT_SLEEVE].scale = 1.0f + breath * std::sin(Action::stopTheta);
+
+		transformList[ePart::BODY].scale = objectInfoList[ePart::BODY].scale;
+		transformList[ePart::LEFT_SLEEVE].scale = objectInfoList[ePart::BODY].scale;
+		transformList[ePart::RIGHT_SLEEVE].scale = objectInfoList[ePart::BODY].scale;
 		return ~static_cast<int>(eAct::STOP);
+	} else {
+		Action::stopTheta = 0.0f;
+		transformList[ePart::BODY].scale = 1.0f;
+		transformList[ePart::LEFT_SLEEVE].scale = 1.0f;
+		transformList[ePart::RIGHT_SLEEVE].scale = 1.0f;
 	}
 
 	float prevTheta = Action::walkTheta;
@@ -121,6 +143,7 @@ int Jump::doAction(std::map<ePart, Transform>& transformList, std::map<ePart, Ob
 
 int Walk::doAction(std::map<ePart, Transform>& transformList, std::map<ePart, ObjectInfo>& objectInfoList) {
 	static const float moveSpeed = 0.05f;
+	static const float amplitude = 0.005f;
 	static const float rotateSpeed = 0.05f;
 	static const float upperArmMax = 10.0f;
 	static const float upperArmMin = 10.0f;
@@ -130,7 +153,7 @@ int Walk::doAction(std::map<ePart, Transform>& transformList, std::map<ePart, Ob
 	static const float upperLegMin = 20.0f;
 	static const float lowerLegMax = -10.0f;
 	static const float lowerLegMin = 10.0f;
-	static const float yMin = -0.2f;
+	static const float yMin = -0.3f;
 
 	Action::walkTheta += rotateSpeed;
 
@@ -138,7 +161,7 @@ int Walk::doAction(std::map<ePart, Transform>& transformList, std::map<ePart, Ob
 		Action::walkTheta -= glmath::pi * 2.0f;
 	}
 
-	objectInfoList[ePart::BODY].translation = objectInfoList[ePart::BODY].translation + moveSpeed * objectInfoList[ePart::BODY].targetDirection;
+	objectInfoList[ePart::BODY].translation = objectInfoList[ePart::BODY].translation + objectInfoList[ePart::BODY].targetDirection * (moveSpeed + amplitude * std::abs(std::sin(Action::walkTheta)));
 	objectInfoList[ePart::BODY].translation.y = yMin * std::abs(std::sin(Action::walkTheta));
 
 	if (Action::walkTheta < glmath::pi) {
