@@ -9,7 +9,7 @@ Animation::Animation() {
 	m_actionList[eAct::JUMP] = std::make_unique<Jump>();
 	m_actionList[eAct::WALK] = std::make_unique<Walk>();
 
-	for (int part = static_cast<int>(ePart::BODY); part < static_cast<int>(ePart::NONE); part++) {
+	for (int part = static_cast<int>(ePart::PELVIS); part < static_cast<int>(ePart::NONE); part++) {
 		m_transformList[static_cast<ePart>(part)] = Transform();
 		m_objectInfoList[static_cast<ePart>(part)] = ObjectInfo();
 	}
@@ -32,7 +32,7 @@ void Animation::changeState(const int inputState, const glmath::vec3& dir) {
 	}
 
 	if (inputState & eAct::ROTATE) {
-		m_objectInfoList[ePart::BODY].targetDirection = dir;
+		m_objectInfoList[ePart::PELVIS].targetDirection = dir;
 		m_state = m_state | eAct::ROTATE;
 	}
 
