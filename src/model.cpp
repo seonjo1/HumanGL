@@ -80,12 +80,12 @@ PartInfo Model::getPartInfo(ePart part) {
 		{ ePart::RIGHT_UPPER_ARM, { ePart::RIGHT_UPPER_ARM, glmath::vec3(1.25f, 0.5f, 0.0f), glmath::vec3(0.0f, 0.75f, 0.0f), glmath::quat(), glmath::vec3(0.5f, 1.5f, 0.5f), glmath::vec3(0.95f, 0.80f, 0.72f) } }, // 오른쪽 상박
 		{ ePart::RIGHT_SLEEVE, { ePart::RIGHT_SLEEVE, glmath::vec3(0.0f, 0.26f, 0.0f), glmath::vec3(0.0f, 0.0f, 0.0f), glmath::quat(), glmath::vec3(0.6f, 1.0f, 0.6f), glmath::vec3(0.184f, 0.184f, 0.184f) } }, // 왼쪽 상박
 		{ ePart::RIGHT_LOWER_ARM, { ePart::RIGHT_LOWER_ARM, glmath::vec3(0.0f, -1.5f, 0.0f), glmath::vec3(0.0f, 0.75f, 0.0f), glmath::quat(), glmath::vec3(0.5f, 1.5f, 0.5f), glmath::vec3(0.95f, 0.80f, 0.72f) } }, // 오른쪽 하박
-		{ ePart::LEFT_UPPER_LEG, { ePart::LEFT_UPPER_LEG, glmath::vec3(-0.5f, -1.25f, 0.0f), glmath::vec3(0.0f, 1.0f, 0.0f), glmath::quat(), glmath::vec3(1.0f, 2.0f, 0.8f), glmath::vec3(0.483f, 0.424f, 0.359f) } }, // 왼쪽 상박 (다리)
-		{ ePart::LEFT_LOWER_LEG, { ePart::LEFT_LOWER_LEG, glmath::vec3(0.0f, -2.0f, 0.0f), glmath::vec3(0.0f, 1.0f, 0.0f), glmath::quat(), glmath::vec3(1.0f, 2.0f, 0.8f), glmath::vec3(0.483f, 0.424f, 0.359f) } }, // 왼쪽 하박 (다리)
-		{ ePart::RIGHT_UPPER_LEG, { ePart::RIGHT_UPPER_LEG, glmath::vec3(0.5f, -1.25f, 0.0f), glmath::vec3(0.0f, 1.0f, 0.0f), glmath::quat(), glmath::vec3(1.0f, 2.0f, 0.8f), glmath::vec3(0.483f, 0.424f, 0.359f) } }, // 오른쪽 상박 (다리)
-		{ ePart::RIGHT_LOWER_LEG, { ePart::RIGHT_LOWER_LEG, glmath::vec3(0.0f, -2.0f, 0.0f), glmath::vec3(0.0f, 1.0f, 0.0f), glmath::quat(), glmath::vec3(1.0f, 2.0f, 0.8f), glmath::vec3(0.483f, 0.424f, 0.359f) } },  // 오른쪽 하박 (다리)
-		{ ePart::LEFT_FOOT, { ePart::LEFT_FOOT, glmath::vec3(0.0f, -0.76f, -0.19f), glmath::vec3(0.0f, 0.0f, 0.0f), glmath::quat(), glmath::vec3(1.1f, 0.5f, 1.2f), glmath::vec3(0.394f, 0.312f, 0.229f) } },  
-		{ ePart::RIGHT_FOOT, { ePart::RIGHT_FOOT, glmath::vec3(0.0f, -0.76f, -0.19f), glmath::vec3(0.0f, 0.0f, 0.0f), glmath::quat(), glmath::vec3(1.1f, 0.5f, 1.2f), glmath::vec3(0.394f, 0.312f, 0.229f) } }, 
+		{ ePart::LEFT_UPPER_LEG, { ePart::LEFT_UPPER_LEG, glmath::vec3(-0.5f, -1.0f, 0.0f), glmath::vec3(0.0f, 1.0f, 0.0f), glmath::quat(), glmath::vec3(1.0f, 1.5f, 0.8f), glmath::vec3(0.483f, 0.424f, 0.359f) } }, // 왼쪽 상박 (다리)
+		{ ePart::LEFT_LOWER_LEG, { ePart::LEFT_LOWER_LEG, glmath::vec3(0.0f, -1.75f, 0.0f), glmath::vec3(0.0f, 1.0f, 0.0f), glmath::quat(), glmath::vec3(1.0f, 2.5f, 0.8f), glmath::vec3(0.483f, 0.424f, 0.359f) } }, // 왼쪽 하박 (다리)
+		{ ePart::RIGHT_UPPER_LEG, { ePart::RIGHT_UPPER_LEG, glmath::vec3(0.5f, -1.0f, 0.0f), glmath::vec3(0.0f, 1.0f, 0.0f), glmath::quat(), glmath::vec3(1.0f, 1.5f, 0.8f), glmath::vec3(0.483f, 0.424f, 0.359f) } }, // 오른쪽 상박 (다리)
+		{ ePart::RIGHT_LOWER_LEG, { ePart::RIGHT_LOWER_LEG, glmath::vec3(0.0f, -1.75f, 0.0f), glmath::vec3(0.0f, 1.0f, 0.0f), glmath::quat(), glmath::vec3(1.0f, 2.5f, 0.8f), glmath::vec3(0.483f, 0.424f, 0.359f) } },  // 오른쪽 하박 (다리)
+		{ ePart::LEFT_FOOT, { ePart::LEFT_FOOT, glmath::vec3(0.0f, -1.01f, -0.19f), glmath::vec3(0.0f, 0.0f, 0.0f), glmath::quat(), glmath::vec3(1.1f, 0.5f, 1.2f), glmath::vec3(0.394f, 0.312f, 0.229f) } },  
+		{ ePart::RIGHT_FOOT, { ePart::RIGHT_FOOT, glmath::vec3(0.0f, -1.01f, -0.19f), glmath::vec3(0.0f, 0.0f, 0.0f), glmath::quat(), glmath::vec3(1.1f, 0.5f, 1.2f), glmath::vec3(0.394f, 0.312f, 0.229f) } }, 
 		{ ePart::GROUND, { ePart::GROUND, glmath::vec3(0.0f, -0.5f, 0.0f), glmath::vec3(0.0f, 0.0f, 0.0f), glmath::quat(), glmath::vec3(100.0f, 1.0f, 100.0f), glmath::vec3(0.486f, 0.7f, 0.3f) } },  
 	};
 	return partInfoMap[part];
