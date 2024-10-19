@@ -273,7 +273,7 @@ glmath::quat::quat(const vec3& eulerAngle) {
 	glmath::quat xQuat(glmath::vec3(1.0f, 0.0f, 0.0f), glmath::radians(eulerAngle.x));
 	glmath::quat yQuat(glmath::vec3(0.0f, 1.0f, 0.0f), glmath::radians(eulerAngle.y));
 	glmath::quat zQuat(glmath::vec3(0.0f, 0.0f, 1.0f), glmath::radians(eulerAngle.z));
-	glmath::quat mulQuat = zQuat * yQuat * xQuat;
+	glmath::quat mulQuat = xQuat * yQuat * zQuat;
 
 	x = mulQuat.x;
 	y = mulQuat.y;
@@ -282,10 +282,12 @@ glmath::quat::quat(const vec3& eulerAngle) {
 }
 
 glmath::quat glmath::quat::operator*(const quat& rhs) const {
-	return quat( w * rhs.x + x * rhs.w + y * rhs.z - z * rhs.y,
-				w * rhs.y - x * rhs.z + y * rhs.w + z * rhs.x,
-				w * rhs.z + x * rhs.y - y * rhs.x + z * rhs.w,
-				w * rhs.w - x * rhs.x - y * rhs.y - z * rhs.z);
+	return quat (
+		rhs.w * x + rhs.x * w + rhs.y * z - rhs.z * y,
+		rhs.w * y - rhs.x * z + rhs.y * w + rhs.z * x,
+		rhs.w * z + rhs.x * y - rhs.y * x + rhs.z * w,
+		rhs.w * w - rhs.x * x - rhs.y * y - rhs.z * z
+    );
 }
 
 // non-member operator function
