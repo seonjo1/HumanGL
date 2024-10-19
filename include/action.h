@@ -79,6 +79,10 @@ public:
 protected:
 	static float walkTheta;
 	static float breathTheta;
+	static float jumpReadyTheta;
+	static float jumpTheta;
+	static float jumpTime;
+	static float frameTime;
 };
 
 class Stop : public Action {
