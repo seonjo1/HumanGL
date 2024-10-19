@@ -60,13 +60,13 @@ struct ObjectInfo {
 	glmath::vec3 scale;
 	glmath::vec3 translation;
 	glmath::vec3 currentAngle;
-	glmath::vec3 targetAngle;
+	glmath::vec3 actionAngle;
 	glmath::vec3 currentDirection;
 	glmath::vec3 targetDirection;
 
 	ObjectInfo()
 		: velocity(glmath::vec3(0.0f)), scale(glmath::vec3(1.0f)), translation(glmath::vec3(0.0f)),
-		  currentAngle(glmath::vec3(0.0f)), targetAngle(glmath::vec3(0.0f)),
+		  currentAngle(glmath::vec3(0.0f)), actionAngle(glmath::vec3(0.0f)),
 		  currentDirection(glmath::vec3(0.0f, 0.0f, -1.0f)), targetDirection(glmath::vec3(0.0f, 0.0f, -1.0f)) {};
 };
 
@@ -79,8 +79,7 @@ public:
 protected:
 	static float walkTheta;
 	static float breathTheta;
-	static float jumpReadyTheta;
-	static float jumpTheta;
+	static float landTheta;
 	static float jumpTime;
 	static float frameTime;
 };

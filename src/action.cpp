@@ -2,9 +2,8 @@
 
 float Action::walkTheta = 0.0f;
 float Action::breathTheta = 0.0f;
-float Action::jumpReadyTheta = 0.0f;
+float Action::landTheta = 0.0f;
 float Action::jumpTime = 0.0f;
-float Action::jumpTheta = 0.0f;
 float Action::frameTime = 0.1f;
 
 
@@ -147,76 +146,67 @@ int Rotate::doAction(std::map<ePart, Transform>& transformList, std::map<ePart, 
 }
 
 int Jump::doAction(std::map<ePart, Transform>& transformList, std::map<ePart, ObjectInfo>& objectInfoList) {
-	static const float readySpeed = 0.05f;
 	static const float gravity = 0.1f;
-	static const float jumpVelocity = 1.0f;
-	static const float pelvisMax = -30.0f;
-	static const float upperArmMax = -50.0f;
-	static const float lowerArmMax = 60.0f;
-	static const float upperLegMax = 110.0f;
-	static const float lowerLegMax = -130.0f;
-	static const float yMin = -2.5f;
-	static bool jumping = false;
+	static const float jumpVelocity = 1.1f;
+	static const float jumpPelvisMax = -20.0f;
+	static const float jumpBodyMax = 5.0f;
+	static const float jumpUpperArmMax[2] = { 60.0f, 50.0f };
+	static const float jumpLowerArmMax[2] = { 40.0f, 10.0f };
+	static const float jumpUpperLegMax[2] = { 90.0f, 60.0f };
+	static const float jumpLowerLegMax[2] = { -110.0f, -80.0f };
 
-	if (!jumping) {
-		if (jumpReadyTheta < glmath::pi / 2) {
-			jumpReadyTheta += readySpeed;
-			if (jumpReadyTheta >= glmath::pi / 2) {
-				jumpReadyTheta = glmath::pi / 2;
-				jumping = !jumping;
-			}
-		} else {
-			jumpReadyTheta += readySpeed;
-			if (jumpReadyTheta >=  glmath::pi) {
-				jumpReadyTheta = 0.0f;
-				objectInfoList[ePart::PELVIS].currentAngle.x = 0.0f;
-				objectInfoList[ePart::LEFT_UPPER_ARM].currentAngle.x =  0.0f;
-				objectInfoList[ePart::RIGHT_UPPER_ARM].currentAngle.x =  0.0f;
-				objectInfoList[ePart::LEFT_LOWER_ARM].currentAngle.x =  0.0f;
-				objectInfoList[ePart::RIGHT_LOWER_ARM].currentAngle.x =  0.0f;
-				objectInfoList[ePart::LEFT_UPPER_LEG].currentAngle.x =  0.0f;
-				objectInfoList[ePart::RIGHT_UPPER_LEG].currentAngle.x =  0.0f;
-				objectInfoList[ePart::LEFT_LOWER_LEG].currentAngle.x =  0.0f;
-				objectInfoList[ePart::RIGHT_LOWER_LEG].currentAngle.x =  0.0f;
-				return ~static_cast<int>(eAct::JUMP);
-			}
-		}
-		objectInfoList[ePart::PELVIS].currentAngle.x = pelvisMax * std::sin(jumpReadyTheta);
-		objectInfoList[ePart::PELVIS].translation.y = yMin * std::sin(jumpReadyTheta);
-		objectInfoList[ePart::LEFT_UPPER_ARM].currentAngle.x = upperArmMax * std::sin(jumpReadyTheta);
-		objectInfoList[ePart::RIGHT_UPPER_ARM].currentAngle.x = upperArmMax * std::sin(jumpReadyTheta);
-		objectInfoList[ePart::LEFT_LOWER_ARM].currentAngle.x = lowerArmMax * std::sin(jumpReadyTheta);
-		objectInfoList[ePart::RIGHT_LOWER_ARM].currentAngle.x = lowerArmMax * std::sin(jumpReadyTheta);
-		objectInfoList[ePart::LEFT_UPPER_LEG].currentAngle.x = upperLegMax * std::sin(jumpReadyTheta);
-		objectInfoList[ePart::RIGHT_UPPER_LEG].currentAngle.x = upperLegMax * std::sin(jumpReadyTheta);
-		objectInfoList[ePart::LEFT_LOWER_LEG].currentAngle.x = lowerLegMax * std::sin(jumpReadyTheta);
-		objectInfoList[ePart::RIGHT_LOWER_LEG].currentAngle.x = lowerLegMax * std::sin(jumpReadyTheta);
-	} else {
-		jumpTime += frameTime;
-		objectInfoList[ePart::PELVIS].velocity.y = jumpVelocity - gravity * jumpTime;
-		objectInfoList[ePart::PELVIS].translation.y += objectInfoList[ePart::PELVIS].velocity.y * frameTime;
-		objectInfoList[ePart::PELVIS].translation.x += objectInfoList[ePart::PELVIS].velocity.x * objectInfoList[ePart::PELVIS].targetDirection.x;
-		objectInfoList[ePart::PELVIS].translation.z += objectInfoList[ePart::PELVIS].velocity.z * objectInfoList[ePart::PELVIS].targetDirection.z;
-		if (objectInfoList[ePart::PELVIS].translation.y <= yMin) {
-			jumping = !jumping;
-			jumpTime = 0.0f;
-			objectInfoList[ePart::PELVIS].translation.y = yMin;
-			objectInfoList[ePart::PELVIS].velocity = 0.0f;
-		}
+	int left = 0;
+	int right = 1;
+
+	if (walkTheta > glmath::pi) {
+		left = 1;
+		right = 0;
 	}
 
-	transformList[ePart::PELVIS].rotation = glmath::quat(glmath::vec3(objectInfoList[ePart::PELVIS].currentAngle.x, 0.0f, 0.0f)) * transformList[ePart::PELVIS].rotation;
+	jumpTime += frameTime;
+	float jumpTheta[2] = { std::max(0.0f, std::min(glmath::pi * (gravity / (2 * jumpVelocity)) * jumpTime + glmath::pi * 0.2f , glmath::pi)),
+						   std::min(glmath::pi * (gravity / (2 * jumpVelocity)) * jumpTime, glmath::pi)};
+	if (jumpTheta[1] <= glmath::pi * 0.4) {
+		jumpTheta[0] = jumpTheta[1] * 1.5;
+	}
+	objectInfoList[ePart::PELVIS].velocity.y = jumpVelocity - gravity * jumpTime;
+	objectInfoList[ePart::PELVIS].translation.y += objectInfoList[ePart::PELVIS].velocity.y * frameTime;
+	objectInfoList[ePart::PELVIS].translation.x += objectInfoList[ePart::PELVIS].velocity.x * objectInfoList[ePart::PELVIS].targetDirection.x;
+	objectInfoList[ePart::PELVIS].translation.z += objectInfoList[ePart::PELVIS].velocity.z * objectInfoList[ePart::PELVIS].targetDirection.z;
+
+	objectInfoList[ePart::PELVIS].actionAngle.x = jumpPelvisMax * std::sin(jumpTheta[0]);
+	objectInfoList[ePart::BODY].actionAngle.x = jumpBodyMax * std::sin(jumpTheta[0]);
+	objectInfoList[ePart::LEFT_UPPER_ARM].actionAngle.z = -jumpUpperArmMax[left] * std::sin(jumpTheta[left]);
+	objectInfoList[ePart::RIGHT_UPPER_ARM].actionAngle.z = jumpUpperArmMax[right] * std::sin(jumpTheta[right]);
+	objectInfoList[ePart::LEFT_LOWER_ARM].actionAngle.x = jumpLowerArmMax[left] * std::sin(jumpTheta[left]);
+	objectInfoList[ePart::RIGHT_LOWER_ARM].actionAngle.x = jumpLowerArmMax[right] * std::sin(jumpTheta[right]);
+	objectInfoList[ePart::LEFT_UPPER_LEG].actionAngle.x = jumpUpperLegMax[left] * std::sin(jumpTheta[left]);
+	objectInfoList[ePart::RIGHT_UPPER_LEG].actionAngle.x = jumpUpperLegMax[right] * std::sin(jumpTheta[right]);
+	objectInfoList[ePart::LEFT_LOWER_LEG].actionAngle.x = jumpLowerLegMax[left] * std::sin(jumpTheta[left]);
+	objectInfoList[ePart::RIGHT_LOWER_LEG].actionAngle.x = jumpLowerLegMax[right] * std::sin(jumpTheta[right]);
+
+	if (objectInfoList[ePart::PELVIS].velocity.y <= -jumpVelocity) {
+		jumpTime = 0.0f;
+		objectInfoList[ePart::PELVIS].translation.y = 0.0f;
+		objectInfoList[ePart::PELVIS].velocity.y = 0.0f;
+
+		return ~static_cast<int>(eAct::JUMP);
+	}
+
+	transformList[ePart::PELVIS].rotation = glmath::quat(glmath::vec3(objectInfoList[ePart::PELVIS].currentAngle.x + objectInfoList[ePart::PELVIS].actionAngle.x, 0.0f, 0.0f)) * transformList[ePart::PELVIS].rotation;
 	transformList[ePart::PELVIS].translation = objectInfoList[ePart::PELVIS].translation;
+	transformList[ePart::BODY].rotation = glmath::quat(glmath::vec3(objectInfoList[ePart::BODY].currentAngle.x + objectInfoList[ePart::BODY].actionAngle.x, 0.0f, 0.0f));
 
-	transformList[ePart::LEFT_UPPER_ARM].rotation = glmath::quat(glmath::vec3(objectInfoList[ePart::LEFT_UPPER_ARM].currentAngle.x, 0.0f, 0.0f));
-	transformList[ePart::RIGHT_UPPER_ARM].rotation = glmath::quat(glmath::vec3(objectInfoList[ePart::RIGHT_UPPER_ARM].currentAngle.x, 0.0f, 0.0f));
-	transformList[ePart::LEFT_LOWER_ARM].rotation = glmath::quat(glmath::vec3(objectInfoList[ePart::LEFT_LOWER_ARM].currentAngle.x, 0.0f, 0.0f));
-	transformList[ePart::RIGHT_LOWER_ARM].rotation = glmath::quat(glmath::vec3(objectInfoList[ePart::RIGHT_LOWER_ARM].currentAngle.x, 0.0f, 0.0f));
 
-	transformList[ePart::LEFT_UPPER_LEG].rotation = glmath::quat(glmath::vec3(objectInfoList[ePart::LEFT_UPPER_LEG].currentAngle.x, 0.0f, 0.0f));
-	transformList[ePart::RIGHT_UPPER_LEG].rotation = glmath::quat(glmath::vec3(objectInfoList[ePart::RIGHT_UPPER_LEG].currentAngle.x, 0.0f, 0.0f));
-	transformList[ePart::LEFT_LOWER_LEG].rotation = glmath::quat(glmath::vec3(objectInfoList[ePart::LEFT_LOWER_LEG].currentAngle.x, 0.0f, 0.0f));
-	transformList[ePart::RIGHT_LOWER_LEG].rotation = glmath::quat(glmath::vec3(objectInfoList[ePart::RIGHT_LOWER_LEG].currentAngle.x, 0.0f, 0.0f));
+	transformList[ePart::LEFT_UPPER_ARM].rotation = glmath::quat(glmath::vec3(0.0f, 0.0f, objectInfoList[ePart::LEFT_UPPER_ARM].currentAngle.z + objectInfoList[ePart::LEFT_UPPER_ARM].actionAngle.z));
+	transformList[ePart::RIGHT_UPPER_ARM].rotation = glmath::quat(glmath::vec3(0.0f, 0.0f, objectInfoList[ePart::RIGHT_UPPER_ARM].currentAngle.z + objectInfoList[ePart::RIGHT_UPPER_ARM].actionAngle.z));
+	transformList[ePart::LEFT_LOWER_ARM].rotation = glmath::quat(glmath::vec3(objectInfoList[ePart::LEFT_LOWER_ARM].currentAngle.x + objectInfoList[ePart::LEFT_LOWER_ARM].actionAngle.x, 0.0f, 0.0f));
+	transformList[ePart::RIGHT_LOWER_ARM].rotation = glmath::quat(glmath::vec3(objectInfoList[ePart::RIGHT_LOWER_ARM].currentAngle.x + objectInfoList[ePart::RIGHT_LOWER_ARM].actionAngle.x, 0.0f, 0.0f));
+
+	transformList[ePart::LEFT_UPPER_LEG].rotation = glmath::quat(glmath::vec3(objectInfoList[ePart::LEFT_UPPER_LEG].currentAngle.x + objectInfoList[ePart::LEFT_UPPER_LEG].actionAngle.x, 0.0f, 0.0f));
+	transformList[ePart::RIGHT_UPPER_LEG].rotation = glmath::quat(glmath::vec3(objectInfoList[ePart::RIGHT_UPPER_LEG].currentAngle.x + objectInfoList[ePart::RIGHT_UPPER_LEG].actionAngle.x, 0.0f, 0.0f));
+	transformList[ePart::LEFT_LOWER_LEG].rotation = glmath::quat(glmath::vec3(objectInfoList[ePart::LEFT_LOWER_LEG].currentAngle.x + objectInfoList[ePart::LEFT_LOWER_LEG].actionAngle.x, 0.0f, 0.0f));
+	transformList[ePart::RIGHT_LOWER_LEG].rotation = glmath::quat(glmath::vec3(objectInfoList[ePart::RIGHT_LOWER_LEG].currentAngle.x + objectInfoList[ePart::RIGHT_LOWER_LEG].actionAngle.x, 0.0f, 0.0f));
 	
 	return static_cast<int>(eAct::FULLBIT);
 }
