@@ -52,8 +52,7 @@ void Camera::saveCurrentPos(float x, float y) {
 
 glmath::mat4 Camera::getViewMatrix() {
 	glmath::vec3 eulerAngle(m_cameraPitch, m_cameraYaw, 0);
-	glmath::vec4 cameraFront = glmath::mat4_cast(glmath::quat(eulerAngle)) * glmath::vec4(0.0f, 0.0f, -1.0f, 0.0f);
-	m_cameraFront = glmath::vec3(cameraFront.x, cameraFront.y, cameraFront.z);
+	m_cameraFront = glmath::mat4_cast(glmath::quat(eulerAngle)) * glmath::vec4(0.0f, 0.0f, -1.0f, 0.0f);
 	
 	return glmath::lookAt(m_cameraPos, m_cameraPos + m_cameraFront, m_cameraUp);
 }
