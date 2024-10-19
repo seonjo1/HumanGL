@@ -24,17 +24,21 @@ std::unique_ptr<Animation> Animation::createAnimationManager() {
 
 
 void Animation::changeState(const int inputState, const glmath::vec3& dir) {
+
+	if (inputState & eAct::ROTATE) {
+		m_objectInfoList[ePart::PELVIS].targetDirection = dir;
+	} else {
+		m_objectInfoList[ePart::PELVIS].targetDirection = m_objectInfoList[ePart::PELVIS].currentDirection;
+	}
+
 	if (!inputState && !m_state) {
-		m_state = static_cast<int>(eAct::STOP);
+		m_state = static_cast<int>(eAct::STOP) | static_cast<int>(eAct::ROTATE);
 		return ;
 	} else {
 		m_state = m_state & ~static_cast<int>(eAct::STOP);
 	}
 
-	if (inputState & eAct::ROTATE) {
-		m_objectInfoList[ePart::PELVIS].targetDirection = dir;
-		m_state = m_state | eAct::ROTATE;
-	}
+	m_state = m_state | eAct::ROTATE;
 
 	if (m_state & eAct::JUMP) {
 		return ;
