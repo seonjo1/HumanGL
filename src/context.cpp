@@ -90,7 +90,7 @@ void Context::processAnimation(GLFWwindow *window) {
 	glmath::vec3 dir = setDirection(inputState, pressUp, pressLeft, pressDown, pressRight);
 
 
-	if (glfwGetKey(window, GLFW_KEY_LEFT_ALT)) {
+	if (glfwGetKey(window, GLFW_KEY_SPACE)) {
 		inputState = inputState | eAct::JUMP;
 	}
 
