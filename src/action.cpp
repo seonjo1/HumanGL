@@ -166,8 +166,8 @@ int Jump::doAction(std::map<ePart, Transform>& transformList, std::map<ePart, Ob
 	jumpTime += frameTime;
 	float jumpTheta[2] = { std::max(0.0f, std::min(glmath::pi * (gravity / (2 * jumpVelocity)) * jumpTime + glmath::pi * 0.2f , glmath::pi)),
 						   std::min(glmath::pi * (gravity / (2 * jumpVelocity)) * jumpTime, glmath::pi)};
-	if (jumpTheta[1] <= glmath::pi * 0.4) {
-		jumpTheta[0] = jumpTheta[1] * 1.5;
+	if (jumpTheta[1] <= glmath::pi * 0.2f) {
+		jumpTheta[0] = jumpTheta[1] * 2.0f;
 	}
 	objectInfoList[ePart::PELVIS].velocity.y = jumpVelocity - gravity * jumpTime;
 	objectInfoList[ePart::PELVIS].translation.y += objectInfoList[ePart::PELVIS].velocity.y * frameTime;
